@@ -12,7 +12,7 @@ import React, { useState, useEffect } from 'react';
 // Shifts: [0, 1, 2] for Day Afternoon Night
 // Intermediate English = 2
 
-const criteria = ["english", "locations", "shift", "industry"]
+const fields = ["English", "Locations", "Shift", "Industry"]
 
 const englishMapping = {
   1: "Basic",
@@ -31,7 +31,7 @@ const jobs = {
     company: 'Advocate Health',
     english: 2,
     locations: ['Lakeview', 'Park Ridge', 'Oak Lawn', 'South Chicago', 'Downers Grove'],
-    shift: [0, 1, 2],
+    shifts: [0, 1, 2],
     industry: "Medical",
     notes: {
       description: 
@@ -47,7 +47,7 @@ const jobs = {
     company: 'Amazon',
     english: 2,
     locations: ['Multiple', 'Multiple'],
-    shift: [0, 1, 2],
+    shifts: [0, 1, 2],
     industry: "Warehouse",
     notes: {
       description: 
@@ -78,12 +78,64 @@ const JobList = ({jobList, setSelected}) => {
   );
 }
 
+const Input = ({field}) => {
+  return (
+    <React.Fragment>
+      <h1 className="w-5/6 mb-5 text-2xl">
+        {field}
+      </h1>
+      <input 
+        className="w-5/6 h-16 border rounded-2xl mb-10" 
+        placeholder={field}
+        type="text"
+      />
+    </React.Fragment>
+  );
+}
+
+
+const InputList = ({fields}) => {
+  return (
+    <React.Fragment>
+      {fields.map((field, index) => (
+        <Input id={index} field={field} />
+      ))}
+    </React.Fragment>
+  );
+}
+
+
+/*
+Amazon: {
+    company: 'Amazon',
+    english: 2,
+    locations: ['Multiple', 'Multiple'],
+    shift: [0, 1, 2],
+    industry: "Warehouse",
+    notes: {
+      description: 
+        `Need enough english to nevigate the warehouse. 
+        Check https://www.amazon.jobs/en/ for current available jobs. 
+        Create account and apply for client. Various locations`
+    }
+  }
+*/
 const Modal = ({selected, setSelected}) => {
   return (
     <div className="w-11/12 h-5/6 border rounded-lg shadow-2xl flex flex-col items-center">
       <div className="w-auto font-sans text-6xl mt-10 mb-10">
         {selected.company}, {selected.locations.length > 1 ? "Multiple Locations" : selected.locations[0]}
       </div>
+      <div className="w-5/6 text-4xl flex items-start justify-start mb-5">English Level:</div>
+      <div className="w-5/6 h-auto font-sans text-2xl mb-5">{englishMapping[selected.english]}</div>
+      <div className="w-5/6 text-4xl flex items-start justify-start mb-5">Shifts:</div>
+      <div className="w-5/6 h-auto font-sans text-2xl mb-5">{selected.shifts.map((shift, index) => 
+            (index === selected.shifts.length - 1 ? shiftMapping[shift] : shiftMapping[shift] + ", "))}</div>
+      <div className="w-5/6 text-4xl flex items-start justify-start mb-5">Industry:</div>
+      <div className="w-5/6 h-auto font-sans text-2xl mb-5">{selected.industry}</div>
+      <div className="w-5/6 text-4xl flex items-start justify-start mb-5">Locations:</div>
+      <div className="w-5/6 h-auto font-sans text-2xl mb-5">{selected.locations.map((location, index) => 
+            (index === selected.locations.length - 1 ? location : location + ", "))}</div>
       <div className="w-5/6 text-4xl flex items-start justify-start mb-5">Job Description:</div>
       <div className="w-5/6 h-4/6 font-sans text-2xl">{selected.notes.description}</div>
       <div className="w-1/6 h-16 border rounded-md flex items-center justify-center"
@@ -95,6 +147,7 @@ const Modal = ({selected, setSelected}) => {
 function App() {
   
   const [selected, setSelected] = useState(null);
+  const [query, setQuery] = useState({});
 
   return (
 
@@ -112,6 +165,7 @@ function App() {
               </div>
               <div className="w-full h-5/6 flex justify-around flex-row items-center">
                   <div className="w-5/12 h-5/6 border rounded-lg shadow-2xl flex flex-col items-center justify-center">
+                    <InputList fields={fields}/>
                   </div>
                   <div className="w-6/12 h-5/6 border rounded-lg shadow-2xl flex flex-col 
                     justify-center items-center">
