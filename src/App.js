@@ -12,7 +12,7 @@ import React, { useState, useEffect } from 'react';
 // Shifts: [0, 1, 2] for Day Afternoon Night
 // Intermediate English = 2
 
-const fields = ["English", "Locations", "Shift", "Industry"]
+const fields = ["English", "Locations", "Shifts", "Industry"]
 
 const englishMapping = {
   1: "Basic",
@@ -24,6 +24,18 @@ const shiftMapping = {
   0: "Day",
   1: "Afternoon",
   2: "Night"
+}
+
+const englishMapping2 = {
+  "Basic": 1,
+  "Intermediate": 2,
+  "Advanced": 3
+}
+
+const shiftMapping2 = {
+  "Day": 0, 
+  "Afternoon": 1,
+  "Night": 2
 }
 
 const jobs = {
@@ -70,15 +82,19 @@ const Job = ({job, setSelected}) => {
 
 const JobList = ({jobList, setSelected}) => {
   return (
+    Object.keys(jobList).length === 0 
+    ? 
+    <text>No matching jobs!</text>
+    :
     <React.Fragment>
-      {Object.values(jobList).map(job => {
-        return <Job job={job} setSelected={setSelected}/>
+      {Object.values(jobList).map((job, index) => {
+        return <Job id={index} job={job} setSelected={setSelected}/>
       })}
     </React.Fragment>
   );
 }
 
-const Input = ({field}) => {
+const Input = ({field, query, setQuery}) => {
   return (
     <React.Fragment>
       <h1 className="w-5/6 mb-5 text-2xl">
@@ -86,6 +102,11 @@ const Input = ({field}) => {
       </h1>
       <input 
         className="w-5/6 h-16 border rounded-2xl mb-10" 
+        onChange={event => {
+          let queryCopy = {...query};
+          queryCopy[field] = event.target.value;
+          setQuery(queryCopy);
+        }}
         placeholder={field}
         type="text"
       />
@@ -94,32 +115,65 @@ const Input = ({field}) => {
 }
 
 
-const InputList = ({fields}) => {
+const InputList = ({fields, setFilteredJobs, query, setQuery}) => {
   return (
     <React.Fragment>
       {fields.map((field, index) => (
-        <Input id={index} field={field} />
+        <Input id={index} field={field} query={query} setQuery={setQuery}/>
       ))}
+      <button 
+        className="w-5/6 h-16 border rounded-2xl mb-10"
+        onClick={() => {
+          let filteredJobs = {};
+
+          Object.values(jobs).map((job, index) => {
+            let validJob = true;
+
+            for (const [key, value] of Object.entries(query)) {
+              if (value === "") {
+                continue; // Keys that were potentially cleared out from before
+              }
+
+              let keyParsed = key.toLowerCase();
+
+              if (keyParsed === 'english') {
+                if (englishMapping2[value] < job['english']) {
+                  validJob = false;
+                  break;
+                }
+              } else if (keyParsed === 'locations') {
+                if (!job.locations.includes(value)) {
+                  validJob = false;
+                  break;
+                }
+              } else if (keyParsed === 'shifts') {
+                if (!job.shifts.includes(shiftMapping2[value])) {
+                  validJob = false;
+                  break;
+                }
+              } else if (keyParsed === 'industry') {
+                if (value !== job['industry']) {
+                  validJob = false;
+                  break;
+                }
+              } else {
+                continue;
+              }  
+            }
+
+            if (validJob) {
+              filteredJobs[job.company] = job;
+            }
+
+            setFilteredJobs(filteredJobs);
+          })
+        }}>
+        Filter Jobs
+      </button>
     </React.Fragment>
   );
 }
 
-
-/*
-Amazon: {
-    company: 'Amazon',
-    english: 2,
-    locations: ['Multiple', 'Multiple'],
-    shift: [0, 1, 2],
-    industry: "Warehouse",
-    notes: {
-      description: 
-        `Need enough english to nevigate the warehouse. 
-        Check https://www.amazon.jobs/en/ for current available jobs. 
-        Create account and apply for client. Various locations`
-    }
-  }
-*/
 const Modal = ({selected, setSelected}) => {
   return (
     <div className="w-11/12 h-5/6 border rounded-lg shadow-2xl flex flex-col items-center">
@@ -148,9 +202,9 @@ function App() {
   
   const [selected, setSelected] = useState(null);
   const [query, setQuery] = useState({});
+  const [filteredJobs, setFilteredJobs] = useState(jobs);
 
   return (
-
     <React.Fragment>
       {selected ? 
         <div className="w-screen h-screen flex items-center justify-center">
@@ -165,11 +219,19 @@ function App() {
               </div>
               <div className="w-full h-5/6 flex justify-around flex-row items-center">
                   <div className="w-5/12 h-5/6 border rounded-lg shadow-2xl flex flex-col items-center justify-center">
-                    <InputList fields={fields}/>
+                    <InputList 
+                      fields={fields} 
+                      setFilteredJobs={setFilteredJobs}
+                      query={query} 
+                      setQuery={setQuery}
+                    />
                   </div>
                   <div className="w-6/12 h-5/6 border rounded-lg shadow-2xl flex flex-col 
                     justify-center items-center">
-                    <JobList jobList={jobs} setSelected={setSelected}/>
+                    <JobList 
+                      jobList={filteredJobs} 
+                      setSelected={setSelected}
+                    />
                   </div>
               </div>
           </React.Fragment>
