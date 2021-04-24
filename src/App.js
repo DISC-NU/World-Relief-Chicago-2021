@@ -12,8 +12,11 @@ import React, { useState, useEffect } from 'react';
 // Shifts: [0, 1, 2] for Day Afternoon Night
 // Intermediate English = 2
 
+
+// Fields to filter jobs by
 const fields = ["English", "Locations", "Shifts", "Industry"]
 
+// Bi-directional mapping from english level, shift # to description 
 const englishMapping = {
   1: "Basic",
   2: "Intermediate",
@@ -38,6 +41,7 @@ const shiftMapping2 = {
   "Night": 2
 }
 
+// Hard-coded job list
 const jobs = {
   AdvocateHealth: {
     company: 'Advocate Health',
@@ -70,6 +74,7 @@ const jobs = {
   }
 }
 
+// Job component (individual job)
 const Job = ({job, setSelected}) => {
   return (
     <div 
@@ -80,6 +85,7 @@ const Job = ({job, setSelected}) => {
   );
 }
 
+// List of jobs (display on RHS of app screen)
 const JobList = ({jobList, setSelected}) => {
   return (
     Object.keys(jobList).length === 0 
@@ -94,6 +100,7 @@ const JobList = ({jobList, setSelected}) => {
   );
 }
 
+// Input field component (english, location, shift, or industry field)
 const Input = ({field, query, setQuery}) => {
   return (
     <React.Fragment>
@@ -114,7 +121,7 @@ const Input = ({field, query, setQuery}) => {
   );
 }
 
-
+// List of all input fields to filter by (LHS of app screen)
 const InputList = ({fields, setFilteredJobs, query, setQuery}) => {
   return (
     <React.Fragment>
@@ -124,11 +131,15 @@ const InputList = ({fields, setFilteredJobs, query, setQuery}) => {
       <button 
         className="w-5/6 h-16 border rounded-2xl mb-10"
         onClick={() => {
-          let filteredJobs = {};
 
-          Object.values(jobs).map((job, index) => {
+          // Jobs that match all input criteria
+          let filteredJobs = {}; 
+
+          // Loop over each job, add to `filteredJobs` if appropriate
+          Object.values(jobs).map((job) => {
             let validJob = true;
 
+            // Loop over each input field; determine if it matches w/ the current job data
             for (const [key, value] of Object.entries(query)) {
               if (value === "") {
                 continue; // Keys that were potentially cleared out from before
@@ -174,6 +185,7 @@ const InputList = ({fields, setFilteredJobs, query, setQuery}) => {
   );
 }
 
+// Modal to display specific info for a selected job
 const Modal = ({selected, setSelected}) => {
   return (
     <div className="w-11/12 h-5/6 border rounded-lg shadow-2xl flex flex-col items-center">
@@ -198,6 +210,7 @@ const Modal = ({selected, setSelected}) => {
   );
 }
 
+// Main app: encapsulates input fields, (filtered) job list, & modals for individual jobs
 function App() {
   
   const [selected, setSelected] = useState(null);
@@ -240,7 +253,5 @@ function App() {
     </React.Fragment>
   );
 }
-
-
 
 export default App;
