@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-
+import { fields, englishMapping, shiftMapping, jobs } from './data.js';
 
 // TENTATIVELY: 
 // Company Name: String
@@ -12,65 +12,68 @@ import React, { useState, useEffect } from 'react';
 // Shifts: [0, 1, 2] for Day Afternoon Night
 // Intermediate English = 2
 
-const fields = ["English", "Locations", "Shift", "Industry"]
+// const fields = ["English", "Locations", "Shift", "Industry"]
 
-const englishMapping = {
-  1: "Basic",
-  2: "Intermediate",
-  3: "Advanced"
-}
+// const englishMapping = {
+//   1: "Basic",
+//   2: "Intermediate",
+//   3: "Advanced"
+// }
 
-const shiftMapping = {
-  0: "Day",
-  1: "Afternoon",
-  2: "Night"
-}
+// const shiftMapping = {
+//   0: "Day",
+//   1: "Afternoon",
+//   2: "Night"
+// }
 
-const jobs = {
-  AdvocateHealth: {
-    company: 'Advocate Health',
-    english: 2,
-    locations: ['Lakeview', 'Park Ridge', 'Oak Lawn', 'South Chicago', 'Downers Grove'],
-    shifts: [0, 1, 2],
-    industry: "Medical",
-    notes: {
-      description: 
-       `Rachael Fecht is POC; 3 positions available: 
-        CNA, Housekeeping, Food and Nutrition. Apply online for a position, include resume. 
-        Email Rachael to inform her of application. Personal assessment required. 
-        HR interview guaranteed if personal assessment is passed. 
-        Pay starts at $14, increases with experience level.`
-    }
-  },
+// const jobs = {
+//   AdvocateHealth: {
+//     company: 'Advocate Health',
+//     english: 2,
+//     locations: ['Lakeview', 'Park Ridge', 'Oak Lawn', 'South Chicago', 'Downers Grove'],
+//     shifts: [0, 1, 2],
+//     industry: "Medical",
+//     notes: {
+//       description: 
+//        `Rachael Fecht is POC; 3 positions available: 
+//         CNA, Housekeeping, Food and Nutrition. Apply online for a position, include resume. 
+//         Email Rachael to inform her of application. Personal assessment required. 
+//         HR interview guaranteed if personal assessment is passed. 
+//         Pay starts at $14, increases with experience level.`
+//     }
+//   },
   
-  Amazon: {
-    company: 'Amazon',
-    english: 2,
-    locations: ['Multiple', 'Multiple'],
-    shifts: [0, 1, 2],
-    industry: "Warehouse",
-    notes: {
-      description: 
-        `Need enough english to nevigate the warehouse. 
-        Check https://www.amazon.jobs/en/ for current available jobs. 
-        Create account and apply for client. Various locations`
-    }
-  }
-}
+//   Amazon: {
+//     company: 'Amazon',
+//     english: 2,
+//     locations: ['Multiple', 'Multiple'],
+//     shifts: [0, 1, 2],
+//     industry: "Warehouse",
+//     notes: {
+//       description: 
+//         `Need enough english to nevigate the warehouse. 
+//         Check https://www.amazon.jobs/en/ for current available jobs. 
+//         Create account and apply for client. Various locations`
+//     }
+//   }
+// }
 
 const Job = ({job, setSelected}) => {
   return (
     <div 
       onClick={() => setSelected(job)}
-      className="w-4/6 h-16 border rounded-2xl flex items-center justify-center mt-2">
+      className="w-5/6 h-16 border rounded-2xl flex items-center justify-center mt-2">
       {job.company}, {job.locations.length > 1 ? "Multiple locations" : job.locations[0]}
     </div>
   );
 }
 
 const JobList = ({jobList, setSelected}) => {
+  console.log(jobList);
   return (
     <React.Fragment>
+      <br></br>
+      <br></br>
       {Object.values(jobList).map(job => {
         return <Job job={job} setSelected={setSelected}/>
       })}
@@ -168,7 +171,7 @@ function App() {
                     <InputList fields={fields}/>
                   </div>
                   <div className="w-6/12 h-5/6 border rounded-lg shadow-2xl flex flex-col 
-                    justify-center items-center">
+                    justify-center items-center overflow-y-scroll">
                     <JobList jobList={jobs} setSelected={setSelected}/>
                   </div>
               </div>
