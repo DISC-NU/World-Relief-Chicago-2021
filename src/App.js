@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-
+import { fields, englishMapping, shiftMapping, jobs } from './data.js';
 
 // TENTATIVELY: 
 // Company Name: String
@@ -11,7 +11,6 @@ import React, { useState, useEffect } from 'react';
 // Notes: String
 // Shifts: [0, 1, 2] for Day Afternoon Night
 // Intermediate English = 2
-
 
 // Fields to filter jobs by
 const fields = ["English", "Locations", "Shifts", "Industry"]
@@ -58,20 +57,19 @@ const jobs = {
         Pay starts at $14, increases with experience level.`
     }
   },
-  
   Amazon: {
-    company: 'Amazon',
-    english: 2,
-    locations: ['Multiple', 'Multiple'],
-    shifts: [0, 1, 2],
-    industry: "Warehouse",
-    notes: {
-      description: 
+     company: 'Amazon',
+     english: 2,
+     locations: ['Multiple', 'Multiple'],
+     shifts: [0, 1, 2],
+     industry: "Warehouse",
+     notes: {
+       description: 
         `Need enough english to nevigate the warehouse. 
-        Check https://www.amazon.jobs/en/ for current available jobs. 
-        Create account and apply for client. Various locations`
-    }
-  }
+         Check https://www.amazon.jobs/en/ for current available jobs. 
+         Create account and apply for client. Various locations`
+     }
+   }
 }
 
 // Job component (individual job)
@@ -79,7 +77,7 @@ const Job = ({job, setSelected}) => {
   return (
     <div 
       onClick={() => setSelected(job)}
-      className="w-4/6 h-16 border rounded-2xl flex items-center justify-center mt-2">
+      className="w-5/6 h-16 border rounded-2xl flex items-center justify-center mt-2">
       {job.company}, {job.locations.length > 1 ? "Multiple locations" : job.locations[0]}
     </div>
   );
@@ -87,15 +85,18 @@ const Job = ({job, setSelected}) => {
 
 // List of jobs (display on RHS of app screen)
 const JobList = ({jobList, setSelected}) => {
+  console.log(jobList);
   return (
     Object.keys(jobList).length === 0 
     ? 
     <text>No matching jobs!</text>
     :
     <React.Fragment>
-      {Object.values(jobList).map((job, index) => {
-        return <Job id={index} job={job} setSelected={setSelected}/>
-      })}
+    <br></br>
+    <br></br>
+    {Object.values(jobList).map((job, index) => {
+      return <Job id={index} job={job} setSelected={setSelected}/>
+    })}
     </React.Fragment>
   );
 }
@@ -239,12 +240,9 @@ function App() {
                       setQuery={setQuery}
                     />
                   </div>
-                  <div className="w-6/12 h-5/6 border rounded-lg shadow-2xl flex flex-col 
-                    justify-center items-center">
-                    <JobList 
-                      jobList={filteredJobs} 
-                      setSelected={setSelected}
-                    />
+                  <div 
+                    className="w-6/12 h-5/6 border rounded-lg shadow-2xl flex flex-col justify-center items-center overflow-y-scroll">
+                    <JobList jobList={filteredJobs} setSelected={setSelected}/>
                   </div>
               </div>
           </React.Fragment>
