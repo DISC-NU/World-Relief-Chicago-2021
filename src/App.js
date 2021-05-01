@@ -12,22 +12,7 @@ import { fields, englishMapping, shiftMapping, jobs } from './data.js';
 // Shifts: [0, 1, 2] for Day Afternoon Night
 // Intermediate English = 2
 
-// Fields to filter jobs by
-const fields = ["English", "Locations", "Shifts", "Industry"]
-
 // Bi-directional mapping from english level, shift # to description 
-const englishMapping = {
-  1: "Basic",
-  2: "Intermediate",
-  3: "Advanced"
-}
-
-const shiftMapping = {
-  0: "Day",
-  1: "Afternoon",
-  2: "Night"
-}
-
 const englishMapping2 = {
   "Basic": 1,
   "Intermediate": 2,
@@ -38,38 +23,6 @@ const shiftMapping2 = {
   "Day": 0, 
   "Afternoon": 1,
   "Night": 2
-}
-
-// Hard-coded job list
-const jobs = {
-  AdvocateHealth: {
-    company: 'Advocate Health',
-    english: 2,
-    locations: ['Lakeview', 'Park Ridge', 'Oak Lawn', 'South Chicago', 'Downers Grove'],
-    shifts: [0, 1, 2],
-    industry: "Medical",
-    notes: {
-      description: 
-       `Rachael Fecht is POC; 3 positions available: 
-        CNA, Housekeeping, Food and Nutrition. Apply online for a position, include resume. 
-        Email Rachael to inform her of application. Personal assessment required. 
-        HR interview guaranteed if personal assessment is passed. 
-        Pay starts at $14, increases with experience level.`
-    }
-  },
-  Amazon: {
-     company: 'Amazon',
-     english: 2,
-     locations: ['Multiple', 'Multiple'],
-     shifts: [0, 1, 2],
-     industry: "Warehouse",
-     notes: {
-       description: 
-        `Need enough english to nevigate the warehouse. 
-         Check https://www.amazon.jobs/en/ for current available jobs. 
-         Create account and apply for client. Various locations`
-     }
-   }
 }
 
 // Job component (individual job)
