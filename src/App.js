@@ -14,15 +14,16 @@ import { fields, englishMapping, shiftMapping, jobs } from './data.js';
 
 // Bi-directional mapping from english level, shift # to description 
 const englishMapping2 = {
-  "Basic": 1,
-  "Intermediate": 2,
-  "Advanced": 3
+  "none": 0,
+  "basic": 1,
+  "intermediate": 2,
+  "advanced": 3
 }
 
 const shiftMapping2 = {
-  "Day": 0, 
-  "Afternoon": 1,
-  "Night": 2
+  "day": 0, 
+  "afternoon": 1,
+  "night": 2
 }
 
 // Job component (individual job)
@@ -47,6 +48,14 @@ const JobList = ({jobList, setSelected}) => {
     <React.Fragment>
     <br></br>
     <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
     {Object.values(jobList).map((job, index) => {
       return <Job id={index} job={job} setSelected={setSelected}/>
     })}
@@ -68,6 +77,7 @@ const Input = ({field, query, setQuery}) => {
           queryCopy[field] = event.target.value;
           setQuery(queryCopy);
         }}
+        value={query[field]}
         placeholder={field}
         type="text"
       />
@@ -102,22 +112,22 @@ const InputList = ({fields, setFilteredJobs, query, setQuery}) => {
               let keyParsed = key.toLowerCase();
 
               if (keyParsed === 'english') {
-                if (englishMapping2[value] < job['english']) {
+                if (englishMapping2[value.toLowerCase()] !== job['english']) {
                   validJob = false;
                   break;
                 }
               } else if (keyParsed === 'locations') {
-                if (!job.locations.includes(value)) {
+                if (!job.locations.includes(value)) { // TODO: make case-insensitive
                   validJob = false;
                   break;
                 }
               } else if (keyParsed === 'shifts') {
-                if (!job.shifts.includes(shiftMapping2[value])) {
+                if (!job.shifts.includes(shiftMapping2[value.toLowerCase()])) {
                   validJob = false;
                   break;
                 }
               } else if (keyParsed === 'industry') {
-                if (value !== job['industry']) {
+                if (value !== job['industry']) { // TODO: make case-insensitive
                   validJob = false;
                   break;
                 }
@@ -143,22 +153,22 @@ const InputList = ({fields, setFilteredJobs, query, setQuery}) => {
 const Modal = ({selected, setSelected}) => {
   return (
     <div className="w-11/12 h-5/6 border rounded-lg shadow-2xl flex flex-col items-center">
-      <div className="w-auto font-sans text-6xl mt-10 mb-10">
+      <div className="w-auto font-sans text-3xl mt-5 mb-5">
         {selected.company}, {selected.locations.length > 1 ? "Multiple Locations" : selected.locations[0]}
       </div>
-      <div className="w-5/6 text-4xl flex items-start justify-start mb-5">English Level:</div>
-      <div className="w-5/6 h-auto font-sans text-2xl mb-5">{englishMapping[selected.english]}</div>
-      <div className="w-5/6 text-4xl flex items-start justify-start mb-5">Shifts:</div>
-      <div className="w-5/6 h-auto font-sans text-2xl mb-5">{selected.shifts.map((shift, index) => 
+      <div className="w-5/6 text-2xl flex items-start justify-start mb-5">English Level:</div>
+      <div className="w-5/6 h-auto font-sans text-1xl mb-2">{englishMapping[selected.english]}</div>
+      <div className="w-5/6 text-2xl flex items-start justify-start mb-5">Shifts:</div>
+      <div className="w-5/6 h-auto font-sans text-1xl mb-2">{selected.shifts.map((shift, index) => 
             (index === selected.shifts.length - 1 ? shiftMapping[shift] : shiftMapping[shift] + ", "))}</div>
-      <div className="w-5/6 text-4xl flex items-start justify-start mb-5">Industry:</div>
-      <div className="w-5/6 h-auto font-sans text-2xl mb-5">{selected.industry}</div>
-      <div className="w-5/6 text-4xl flex items-start justify-start mb-5">Locations:</div>
-      <div className="w-5/6 h-auto font-sans text-2xl mb-5">{selected.locations.map((location, index) => 
+      <div className="w-5/6 text-2xl flex items-start justify-start mb-5">Industry:</div>
+      <div className="w-5/6 h-auto font-sans text-1xl mb-2">{selected.industry}</div>
+      <div className="w-5/6 text-2xl flex items-start justify-start mb-5">Locations:</div>
+      <div className="w-5/6 h-auto font-sans text-1xl mb-2">{selected.locations.map((location, index) => 
             (index === selected.locations.length - 1 ? location : location + ", "))}</div>
-      <div className="w-5/6 text-4xl flex items-start justify-start mb-5">Job Description:</div>
-      <div className="w-5/6 h-4/6 font-sans text-2xl">{selected.notes.description}</div>
-      <div className="w-1/6 h-16 border rounded-md flex items-center justify-center"
+      <div className="w-5/6 text-2xl flex items-start justify-start mb-2">Job Description:</div>
+      <div className="w-5/6 h-4/6 font-sans text-1xl">{selected.notes.description}</div>
+      <div className="w-1/6 h-16 border rounded-md flex items-center justify-center mb-5" 
            onClick={() => setSelected(null)}>Close</div>
     </div>
   );
