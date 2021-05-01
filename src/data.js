@@ -346,5 +346,184 @@ export const jobs = {
         english: 1,
         shifts: [0, 1, 2],
         industry: "Medical Manufacturing",
-    }
-    }
+        notes: {
+            description: 
+            `Have the client email or text Matt Skierkiewicz at <matt.skierkiewicz@randstadusa.com>. 
+             Contract to hire position after 600 hrs of work.  Entry level positions are mainly machine operator/ packer positions. 
+             Client will be packing medical supplies as they come off the machine line. 
+             Requirments: HS diploma/ GED, vision test (need to see .7mm vission). 
+             Two days on/ two days off schedule. Must be able to lift 15-20 ilbs. $14/hr for day shift $15/ hr for night shift. 
+             Increases after hired. Benifits after hired. Some offered during contract.`
+        }
+    },
+
+    "Penninsula Hotel": {
+        company: "Penninsula Hotel",
+        locations: ["108 E. Superior St, Chicago, IL 60611"],
+        english: 2,
+        shifts: [0, 1, 2],
+        industry: "Hospitality",
+        notes: {
+            description: 
+            `Contact is Aileen Hilario. Fill out online application and email name of applicant to Aileen for review. 
+            Peninsula will contact to schedule an interview time.`
+        }
+    },
+
+    "Prolist 123": {
+        company: "Prolist 123",
+        locations: ["7080 McCormick Blvd, Lincolnwood, IL 60712"],
+        english: 0,
+        shifts: [0, 1, 2],
+        industry: "Insulation and Carpentry",
+        notes: {
+            description: `
+            $15/hr  with no experience, will increase as experience increases.
+            Baised of performence not time. At least 4 day/ week.  
+            1099 with no benefits. Candidates needs to be 5'6/7" of shorter and small to navigatwe small spaces. `
+        }
+    },
+
+    "Prospect": {
+        company: "Prospect",
+        locations: ["O'Hare"],
+        english: 2,
+        shifts: [0, 1, 2],
+        industry: "Airport",
+        notes: {
+            description: ``
+        }
+    },
+
+    "Rush Medical Group": {
+        company: "Rush Medical Group",
+        locations: ["Downtown, Oak Park, Aurora"],
+        english: 2,
+        shifts: [0, 1, 2],
+        industry: "Medical Services",
+        notes: {
+            description: 
+            `Have client apply to position online and sent resume to Kevine Irvine (Kevin_Irvine@rush.edu), 
+            Chanel Smith (Chanel_N_Smith@rush.edu), and Michael Jones (Michael_A_Jones@rush.edu). 
+            They are apart of the HR team and will be able to flag the clients application. 
+            Have community partnerships that they could potential pass applicant off to if they do not have a position for them. `
+        }
+    },
+
+    "S & C": {
+        company: "S & C",
+        locations: ["6601 N Ridge Blvd, Chicago, IL 60626"],
+        english: 1,
+        shifts: [0, 1, 2],
+        industry: "Manufacturing and Engineering",
+        notes: {
+            description: 
+            `Talant aquisition manger is Rentia Goodwin ( Renita.Goodwin@sandc.com ). 
+            THey have multiple manafacturing positions, check website. 
+            Also have internships and a co-op program. 
+            Pay starts at $15/hr but changes based on experience and positions. They offer benfits. `
+        }
+    },
+
+    "Scrub Inc": {
+        company: "Scrub Inc",
+        locations: ["O'Hare"],
+        english: 1,
+        shifts: [0, 1, 2],
+        industry: "Cleaning",
+        notes: {
+            description:
+            `Go to Scrub office on Elston and Milwaukee to apply in person. 
+            After initial application and interview go to O'Hare for badging and finger printing (can take up to 2-3 weeks).
+            Pick up badge and attend orientation and training at O'Hare before starting.`
+        }
+    },
+
+    "Serendipity": {
+        company: "Serendipity",
+        locations: ["Multiple", "Multiple"],
+        english: 2,
+        shifts: [0, 1, 2],
+        industry: "Home Health Care",
+        notes: {
+            description: `Fill out application and turn it in to Jux at office with other required documents 
+            (High school diploma, TB test, Physical, SSC, and proof of ID)`
+        }
+    },
+
+    "Serenity": {
+        company: "Serenity",
+        locations: ["Multiple", "Multiple"],
+        english: 2,
+        shifts: [0, 1, 2],
+        industry: "Home Health Care",
+        notes: {
+            description: `Contact is Alao (Isokens friend). Phone: (773)416-3338 or laraa@serenityhhc.com`
+        }
+    },
+
+    "South Chicago Packing": {
+        company: "South Chicago Packing",
+        locations: ["945 W 38th St., Chicago, IL 60609"],
+        english: 2,
+        shifts: [0, 1, 2],
+        industry: "Food Manufacturing and Packing",
+        notes: {
+            description: `Apply online and email Nikole Maclan to arrange interview and warehouse tour. 
+            Client will hear back shortly about scheduling a time for the onboarding process.`
+        }
+    },
+
+    "Starbucks": {
+        company: "Starbucks",
+        locations: ["100 S. Wabash, Chicago, IL 60603"],
+        english: 2,
+        shifts: [0, 1],
+        industry: "Food and Beverage",
+        notes: {
+            description: `Email Shawn Gancarz the client's name and brief overview of availability so he can best match them to a store in his district. 
+            Submit online application and interview, wait to hear back from store manager.`
+        }
+    },
+
+    "The W at City Center": {
+        company: "The W at City Center",
+        locations: ["172 Adams St, Chicago, IL 60603"],
+        english: 2,
+        shifts: [0, 1, 2],
+        industry: "Hospitality",
+        notes: {
+            description: ``
+        }
+    },
+
+    "Webb Masonary Restoration": {
+        company: "Webb Masonary Restoration",
+        locations: ["Multiple", "Multiple"],
+        english: 1,
+        shifts: [0, 1, 2],
+        industry: "Carpentry and Masonry",
+        notes: {
+            description: `Connact Dan on one of #'s. 
+            (773)9897389 (Office)  
+            (812)6975851 (In Cell) (773)297-9021 (Chicago Cell)   
+            Email is webbtuc@sbcglobal.net`
+        }
+    },
+
+    "World Wide Flight Service": {
+        company: "Webb Masonary Restoration",
+        locations: ["O`Hare"],
+        english: 2,
+        shifts: [0, 1, 2],
+        industry: "Airport",
+        notes: {
+            description: `Passanger Service Position- Working in the international terminal aiding passangers checking into their flight. 
+            Looking for Spanish, Viet, Mandarine, Polish, French, Arabic, Farsi, Turkish... 
+            Need a drivers liscense and to be able to lift luggage. 
+            $14.10 per hour.  
+            Hiring P/t (dental/vision) and F/T (Med/dent/life/vision). 
+            Apply online, schedule meeting with Patrice, interview with HR manager, then badging and training.`
+        }
+    },
+}
