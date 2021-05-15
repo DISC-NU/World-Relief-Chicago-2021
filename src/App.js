@@ -1,6 +1,14 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import { fields, englishMapping, shiftMapping, jobs } from './data.js';
+// This is needed when we uncomment the useEffect
+import { Loader } from "@googlemaps/js-api-loader";
+
+
+// Origin and Destination are Just Specific Address Strings
+// function GetTime(origin, destination) {
+  
+// }
 
 // TENTATIVELY: 
 // Company Name: String
@@ -57,7 +65,7 @@ const JobList = ({jobList, setSelected}) => {
     <br></br>
     <br></br>
     {Object.values(jobList).map((job, index) => {
-      return <Job id={index} job={job} setSelected={setSelected}/>
+      return <Job id={index} job={job} setSelected={setSelected} key={index}/>
     })}
     </React.Fragment>
   );
@@ -90,7 +98,7 @@ const InputList = ({fields, setFilteredJobs, query, setQuery}) => {
   return (
     <React.Fragment>
       {fields.map((field, index) => (
-        <Input id={index} field={field} query={query} setQuery={setQuery}/>
+        <Input id={index} field={field} query={query} setQuery={setQuery} key={index}/>
       ))}
       <button 
         className="w-5/6 h-16 border rounded-2xl mb-10"
@@ -149,6 +157,7 @@ const InputList = ({fields, setFilteredJobs, query, setQuery}) => {
   );
 }
 
+
 // Modal to display specific info for a selected job
 const Modal = ({selected, setSelected}) => {
   return (
@@ -175,11 +184,37 @@ const Modal = ({selected, setSelected}) => {
 }
 
 // Main app: encapsulates input fields, (filtered) job list, & modals for individual jobs
+
 function App() {
-  
+
   const [selected, setSelected] = useState(null);
   const [query, setQuery] = useState({});
   const [filteredJobs, setFilteredJobs] = useState(jobs);
+  const [service, setService] = useState(null);
+
+  // useEffect(()=> {
+  //   if (service == null) {
+  //     const loader = new Loader({
+  //       apiKey: process.env.REACT_APP_API_KEY,
+  //       version: "weekly"
+  //     });
+  //     loader.load().then(() => {
+  //       setService(new window.google.maps.DistanceMatrixService());
+  //     })
+  //   } else {
+  //     let origin = '2110 W Greenleaf Ave, Chicago, IL 60645'
+  //     let dest = 'Chinatown, Chicago, IL 60616'
+  //   GetTime(origin, dest)
+  //   }
+  // },[service])
+
+  function GetTime(origin, dest) {
+    service.getDistanceMatrix({
+      origins: [origin],
+      destinations: [dest],
+      travelMode: 'TRANSIT'
+    }, (response, status) => {if (status === "OK") console.log(response)})
+  }
 
   return (
     <React.Fragment>
