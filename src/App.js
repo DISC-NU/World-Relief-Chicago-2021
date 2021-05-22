@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CSVToJSON } from './components/FileUpload';
 import { JobDetailModal } from './components/JobDetailModal';
 import { InputList } from './components/InputList';
@@ -146,10 +146,13 @@ function App() {
 
   const [selected, setSelected] = useState(null); // (1)
   const [query, setQuery] = useState({}); // (2)
-  const [jobs, setJobs] = useState({}); // (3)
-  const [filteredJobs, setFilteredJobs] = useState({}); // (4)
-  const fields = ['English', 'Spanish', 'Locations', 'Shift', 'Weekend'] // (5)
-  const options = [['None', 'Basic', 'Intermediate', 'Advanced'],['No','Yes'],[],['Morning','Afternoon','Night'],['No','Yes']] //TODO Locations
+  const [jobs, setJobs] = useState([]); // (3)
+  const [filteredJobs, setFilteredJobs] = useState([]); // (4)
+  const fields = ['English', 'Shifts', 'Billingual', 'Weekend'] // (5)
+  const options = [['None', 'Basic', 'Intermediate', 'Advanced'],['Morning','Afternoon','Night'], ['Yes'],['Yes']] //TODO Locations
+  useEffect(() => {
+    console.log("THIS THE QUERY: ", query);
+  },[query])
 
   return (
     <React.Fragment>
@@ -166,7 +169,9 @@ function App() {
               </div>
               <CSVToJSON setJobs={setJobs} setFilteredJobs={setFilteredJobs}></CSVToJSON>
               <div className="w-full h-full flex justify-around flex-row items-center">
-                  <div className="w-5/12 h-full border rounded-lg shadow-2xl flex flex-col items-center justify-center">
+                  <div className="w-5/12 h-full border rounded-lg shadow-2xl flex flex-col items-center justify-start">
+                    <br></br>
+                    <br></br>
                     <InputList 
                       options={options}
                       fields={fields} 
