@@ -2,11 +2,12 @@ import React from 'react';
 import { Input } from './Input';
 
 // List of all input fields to filter by (LHS of app screen)
-export const InputList = ({fields, jobs, setFilteredJobs, query, setQuery}) => {
+export const InputList = ({options,fields, jobs, setFilteredJobs, query, setQuery}) => {
+  console.log(options);
     return (
       <React.Fragment>
         {fields.map((field, index) => (
-          <Input id={index} field={field} query={query} setQuery={setQuery}/>
+          <Input id={index} options={options[index]} field={field} query={query} setQuery={setQuery}/>
         ))}
         <button 
           className="w-5/6 h-16 border rounded-2xl mb-10"

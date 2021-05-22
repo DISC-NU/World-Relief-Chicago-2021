@@ -149,6 +149,7 @@ function App() {
   const [jobs, setJobs] = useState([]); // (3)
   const [filteredJobs, setFilteredJobs] = useState([]); // (4)
   const fields = ['English', 'Spanish', 'Locations', 'Shift', 'Weekend'] // (5)
+  const options = [['Non', 'Basic', 'Intermediate', 'Advanced'],['No','Yes'],[],['Morning','Afternoon','Night'],['No','Yes']] //TODO Locations
 
   return (
     <React.Fragment>
@@ -167,6 +168,7 @@ function App() {
               <div className="w-full h-full flex justify-around flex-row items-center">
                   <div className="w-5/12 h-full border rounded-lg shadow-2xl flex flex-col items-center justify-center">
                     <InputList 
+                      options={options}
                       fields={fields} 
                       jobs={jobs}
                       setFilteredJobs={setFilteredJobs}
