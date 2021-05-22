@@ -1,3 +1,13 @@
+// TENTATIVELY: 
+// Company Name: String
+// English Level: Integer
+// Location: Array of Strings 
+// Shift: Array of Integers 
+// Industry: String
+// Notes: String
+// Shifts: [0, 1, 2] for Day Afternoon Night
+// Intermediate English = 2
+
 export const fields = ["English", "Locations", "Shift", "Industry"]
 
 // We need to standardized these things
