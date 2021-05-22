@@ -3,7 +3,6 @@ import { Job } from './Job';
 
 // List of jobs (display on RHS of app screen)
 export const JobList = ({jobList, setSelected}) => {
-    console.log(jobList);
     return (
       Object.keys(jobList).length === 0 
       ? 

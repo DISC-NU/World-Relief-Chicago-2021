@@ -1,15 +1,17 @@
 import './App.css';
 import React, { useState } from 'react';
-import { fields, jobs } from './data.js';
+import { fields } from './data.js';
 import { JobList } from './components/JobList';
 import { InputList } from './components/InputList';
 import { JobDetailModal } from './components/JobDetailModal';
+import { CSVToJSON } from './components/FileUpload';
 
 // Main app: encapsulates input fields, (filtered) job list, & modals for individual jobs
 function App() {
   
   const [selected, setSelected] = useState(null);
   const [query, setQuery] = useState({});
+  const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState(jobs);
 
   return (
@@ -25,6 +27,7 @@ function App() {
               <div className="w-auto h-auto font-sans text-6xl flex flex-row justify-center items-center">
                 World Relief Chicago Job Match
               </div>
+              <CSVToJSON jobs={jobs} setJobs={setJobs}></CSVToJSON>
               <div className="w-full h-5/6 flex justify-around flex-row items-center">
                   <div className="w-5/12 h-5/6 border rounded-lg shadow-2xl flex flex-col items-center justify-center">
                     <InputList 

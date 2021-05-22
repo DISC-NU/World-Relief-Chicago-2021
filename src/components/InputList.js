@@ -2,15 +2,15 @@ import React from 'react';
 import { jobs } from '../data.js';
 import { Input } from './Input';
 
-// Bi-directional mapping from english level, shift # to description 
-const englishMapping2 = {
+// Mapping from english level, shift description to #
+const englishMapping = {
     "none": 0,
     "basic": 1,
     "intermediate": 2,
     "advanced": 3
 }
   
-const shiftMapping2 = {
+const shiftMapping = {
     "day": 0, 
     "afternoon": 1,
     "night": 2
@@ -43,7 +43,7 @@ export const InputList = ({fields, setFilteredJobs, query, setQuery}) => {
                 let keyParsed = key.toLowerCase();
   
                 if (keyParsed === 'english') {
-                  if (englishMapping2[value.toLowerCase()] !== job['english']) {
+                  if (englishMapping[value.toLowerCase()] !== job['english']) {
                     validJob = false;
                     break;
                   }
@@ -53,7 +53,7 @@ export const InputList = ({fields, setFilteredJobs, query, setQuery}) => {
                     break;
                   }
                 } else if (keyParsed === 'shifts') {
-                  if (!job.shifts.includes(shiftMapping2[value.toLowerCase()])) {
+                  if (!job.shifts.includes(shiftMapping[value.toLowerCase()])) {
                     validJob = false;
                     break;
                   }
