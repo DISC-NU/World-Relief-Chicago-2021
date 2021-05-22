@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 
 // Input field component (english, location, shift, etc.)
 export const Input = ({options, field, query, setQuery}) => {
-  console.log(options);
     return (
       <React.Fragment>
         <h1 className="w-5/6 mb-5 text-2xl">
