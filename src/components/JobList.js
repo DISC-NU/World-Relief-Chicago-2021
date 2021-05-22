@@ -19,7 +19,7 @@ export const JobList = ({jobList, setSelected}) => {
       <br></br>
       <br></br>
       <br></br>
-      {Object.values(jobList).map((job, index) => {
+      {jobList.map((job, index) => {
         return <Job id={index} job={job} setSelected={setSelected}/>
       })}
       </React.Fragment>

@@ -1,18 +1,58 @@
 import './App.css';
 import React, { useState } from 'react';
-import { fields } from './data.js';
 import { JobList } from './components/JobList';
 import { InputList } from './components/InputList';
 import { JobDetailModal } from './components/JobDetailModal';
 import { CSVToJSON } from './components/FileUpload';
 
+/*
+  NOTE: The job list is of the following form:
+    jobList = {
+      {
+        data: [
+          Company Name (index 0),
+          Industry (1),
+          English Level (2),
+          Bilingual/Spanish Boolean (3),
+          Locations (4),
+          Shifts - i.e. Morning, Afternoon, Night (5),
+          Weekend Shift Boolean (6),
+          Description/Notes (7)
+        ]
+      }
+      ...
+      ...
+    }
+
+    -So basically it's a JSON object consisting of many nested JSON objects within it
+    -Each nested JSON object represents a job entry 
+    & the 'data' field of the object is an 8-element array with specific job information
+    -Thus, to loop over this list of all jobs and "console.log" fields for each job, we would do the following (pseudocode):
+
+      jobList.map((job) => {
+        const jobData = job.data;
+        for (let i = 0; i < 8; i++) {
+          console.log(jobData[i]);
+        }
+      })
+  */
+
 // Main app: encapsulates input fields, (filtered) job list, & modals for individual jobs
 function App() {
   
-  const [selected, setSelected] = useState(null);
-  const [query, setQuery] = useState({});
-  const [jobs, setJobs] = useState([]);
-  const [filteredJobs, setFilteredJobs] = useState(jobs);
+  /*
+    (1) Specific job we have clicked on from the job list on the RHS
+    (2) Query based on inputs on the LHS (i.e. tells us what parameters to filter by)
+    (3) List of all jobs < SEE NOTE AT TOP OF FILE >
+    (4) List of jobs, filtered down by query in (2)
+    (5) Fields to filter jobs by
+  */
+
+  const [selected, setSelected] = useState(null); // (1)
+  const [query, setQuery] = useState({}); // (2)
+  const [jobs, setJobs] = useState([]); // (3)
+  const [filteredJobs, setFilteredJobs] = useState([]); // (4)
+  const fields = ['English', 'Spanish', 'Locations', 'Shift', 'Weekend'] // (5)
 
   return (
     <React.Fragment>
@@ -27,18 +67,19 @@ function App() {
               <div className="w-auto h-auto font-sans text-6xl flex flex-row justify-center items-center">
                 World Relief Chicago Job Match
               </div>
-              <CSVToJSON jobs={jobs} setJobs={setJobs}></CSVToJSON>
-              <div className="w-full h-5/6 flex justify-around flex-row items-center">
-                  <div className="w-5/12 h-5/6 border rounded-lg shadow-2xl flex flex-col items-center justify-center">
+              <CSVToJSON setJobs={setJobs} setFilteredJobs={setFilteredJobs}></CSVToJSON>
+              <div className="w-full h-full flex justify-around flex-row items-center">
+                  <div className="w-5/12 h-full border rounded-lg shadow-2xl flex flex-col items-center justify-center">
                     <InputList 
                       fields={fields} 
+                      jobs={jobs}
                       setFilteredJobs={setFilteredJobs}
                       query={query} 
                       setQuery={setQuery}
                     />
                   </div>
                   <div 
-                    className="w-6/12 h-5/6 border rounded-lg shadow-2xl flex flex-col justify-center items-center overflow-y-scroll">
+                    className="w-6/12 h-full border rounded-lg shadow-2xl flex flex-col justify-center items-center overflow-y-scroll">
                     <JobList jobList={filteredJobs} setSelected={setSelected}/>
                   </div>
               </div>

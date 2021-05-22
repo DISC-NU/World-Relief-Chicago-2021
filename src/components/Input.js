@@ -1,6 +1,6 @@
 import React from 'react';
 
-// Input field component (english, location, shift, or industry field)
+// Input field component (english, location, shift, etc.)
 export const Input = ({field, query, setQuery}) => {
     return (
       <React.Fragment>
