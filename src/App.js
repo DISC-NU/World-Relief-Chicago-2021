@@ -93,12 +93,50 @@ const Input = ({field, query, setQuery}) => {
   );
 }
 
+// Checkbox component for shifts
+const Checkboxes = ({shifts, setShifts}) => {
+  //MAKE MORE GENERALIZABLE FOR ALL INPUT FIELDS
+  const toggleCheckbox = changeEvent => {
+    const { name } = changeEvent.target;
+    let newShifts = [...shifts]
+    if (newShifts.includes(name)) {
+      newShifts.splice(newShifts.indexOf(name), 1);
+    } else {
+      newShifts.push(name);
+    }
+    setShifts(newShifts);
+  };
+
+  return (
+    <React.Fragment>
+      <h1 className="w-5/6 mb-5 text-2xl">
+        Shifts
+      </h1>
+      {Object.keys(shiftMapping2).map((option) => (
+        <label>
+          <input
+            type="checkbox"
+            name={option}
+            value={option}
+            checked={shifts[option]}
+            onChange={toggleCheckbox}
+            className="form-check-input"
+          />
+          {option}
+        </label>
+      ))}
+    </React.Fragment>
+  )
+}
+
 // List of all input fields to filter by (LHS of app screen)
-const InputList = ({fields, setFilteredJobs, query, setQuery}) => {
+const InputList = ({fields, setFilteredJobs, shifts, setShifts, query, setQuery}) => {
   return (
     <React.Fragment>
       {fields.map((field, index) => (
-        <Input id={index} field={field} query={query} setQuery={setQuery} key={index}/>
+        field === "Shift" 
+        ? <Checkboxes shifts={shifts} setShifts={setShifts}/>
+        : <Input id={index} field={field} query={query} setQuery={setQuery} key={index}/>
       ))}
       <button 
         className="w-5/6 h-16 border rounded-2xl mb-10"
@@ -129,11 +167,6 @@ const InputList = ({fields, setFilteredJobs, query, setQuery}) => {
                   validJob = false;
                   break;
                 }
-              } else if (keyParsed === 'shifts') {
-                if (!job.shifts.includes(shiftMapping2[value.toLowerCase()])) {
-                  validJob = false;
-                  break;
-                }
               } else if (keyParsed === 'industry') {
                 if (value !== job['industry']) { // TODO: make case-insensitive
                   validJob = false;
@@ -142,6 +175,17 @@ const InputList = ({fields, setFilteredJobs, query, setQuery}) => {
               } else {
                 continue;
               }  
+            }
+
+            // check shifts
+            let hasShift = false;
+            shifts.forEach(s => {
+              if (job.shifts.includes(shiftMapping2[s.toLowerCase()])) {
+                hasShift = true;
+              }
+            })
+            if (!hasShift) {
+              validJob = false;
             }
 
             if (validJob) {
@@ -191,6 +235,7 @@ function App() {
   const [query, setQuery] = useState({});
   const [filteredJobs, setFilteredJobs] = useState(jobs);
   const [service, setService] = useState(null);
+  const [shifts, setShifts] = useState([]);
 
   // useEffect(()=> {
   //   if (service == null) {
@@ -234,6 +279,8 @@ function App() {
                     <InputList 
                       fields={fields} 
                       setFilteredJobs={setFilteredJobs}
+                      shifts={shifts}
+                      setShifts={setShifts}
                       query={query} 
                       setQuery={setQuery}
                     />
