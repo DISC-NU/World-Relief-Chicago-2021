@@ -153,6 +153,7 @@ function App() {
   useEffect(() => {
     console.log("THIS THE QUERY: ", query);
   },[query])
+
   return (
     <React.Fragment>
       {selected ? 

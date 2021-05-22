@@ -3,6 +3,8 @@ import { Job } from './Job';
 
 // List of jobs (display on RHS of app screen)
 export const JobList = ({jobList, setSelected}) => {
+
+    console.log(jobList);
     return (
       Object.keys(jobList).length === 0 
       ? 
@@ -19,7 +21,7 @@ export const JobList = ({jobList, setSelected}) => {
       <br></br>
       <br></br>
       <br></br>
-      {jobList.map((job, index) => {
+      {Object.values(jobList).map((job, index) => {
         return <Job id={index} job={job} setSelected={setSelected}/>
       })}
       </React.Fragment>

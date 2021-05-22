@@ -18,17 +18,74 @@ export const CSVToJSON = ({setJobs, setFilteredJobs}) => {
   // and `filteredJobs` variables in 'App.js'
   const handleOnFileLoad = (data) => {
 
+    // TODO
+    let jobList = {};
+
     // Remove the 1st entry in the JSON object
     // i.e. the columns at the top of the CSV file, which aren't an actual job
     data.shift();
 
+    // TODO
+    data.map((job, jobIndex) => {
+      let currentJob = {};
+      let currentJobData = job.data;
+
+      currentJobData.map((fieldData, index) => {
+        let field;
+        let fieldDataParsed = fieldData;
+        index = parseInt(index);
+    
+        switch(index) {
+          case 0:
+            field = 'company';
+            break;
+          case 1:
+            field = 'industry';
+            break;
+          case 2:
+            field = 'english';
+            fieldDataParsed = fieldData.toLowerCase();
+            break;
+          case 3:
+            field = 'bilingual';
+            fieldDataParsed = (fieldData.toLowerCase() === "true");
+            break;
+          case 4:
+            field = 'locations';
+            fieldDataParsed = fieldData.split(';');
+            fieldDataParsed.map((location, index) => {
+              fieldDataParsed[index] = location.trim();
+            })
+            break;
+          case 5:
+            field = 'shifts';
+            let shiftsArray = fieldData.split(',');
+
+            shiftsArray.map((shift, index) => {
+              shiftsArray[index] = shift.trim().toLowerCase();
+            })
+
+            fieldDataParsed = shiftsArray;
+            break;
+          case 6:
+            field = 'weekend';
+            fieldDataParsed = (fieldData.toLowerCase() === "true");
+            break;
+          case 7:
+            field = 'notes';
+            break;
+        }
+
+        currentJob[field] = fieldDataParsed;
+      })
+  
+      jobList[job.data[0]] = currentJob;
+    })
+
     // Update `jobs`and `filteredJobs` s/t the app 
     // now displays the list of jobs on the RHS
-    setJobs(data);
-    setFilteredJobs(data);
-
-    // Just a sanity check for us
-    console.log(data);
+    setJobs(jobList);
+    setFilteredJobs(jobList);
   };
 
   const handleOnError = (err) => {
