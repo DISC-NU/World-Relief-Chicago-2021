@@ -1,0 +1,120 @@
+import React from 'react';
+import { CSVReader } from 'react-papaparse';
+
+// See here for original source code: 
+// https://github.com/Bunlong/react-papaparse/blob/master/demo/CSVReader1.js
+
+const buttonRef = React.createRef();
+
+export const CSVToJSON = ({setJobs, setFilteredJobs}) => {
+  
+  const handleOpenDialog = (e) => {
+    if (buttonRef.current) {
+      buttonRef.current.open(e);
+    }
+  };
+
+  // Once we upload a file, update the `jobs` 
+  // and `filteredJobs` variables in 'App.js'
+  const handleOnFileLoad = (data) => {
+
+    // Remove the 1st entry in the JSON object
+    // i.e. the columns at the top of the CSV file, which aren't an actual job
+    data.shift();
+
+    // Update `jobs`and `filteredJobs` s/t the app 
+    // now displays the list of jobs on the RHS
+    setJobs(data);
+    setFilteredJobs(data);
+
+    // Just a sanity check for us
+    console.log(data);
+  };
+
+  const handleOnError = (err) => {
+    alert(err);
+  };
+
+  const handleOnRemoveFile = (data) => {
+    console.log(data);
+  };
+
+  const handleRemoveFile = (e) => {
+    if (buttonRef.current) {
+      buttonRef.current.removeFile(e);
+    }
+  };
+
+  return (
+    <>
+      <CSVReader
+        ref={buttonRef}
+        onFileLoad={handleOnFileLoad}
+        onError={handleOnError}
+        noClick
+        noDrag
+        onRemoveFile={handleOnRemoveFile}
+      >
+        {({ file }) => (
+          <aside
+            style={{
+              justifyContent: 'center',
+              display: 'flex',
+              flexDirection: 'row',
+              marginBottom: 10,
+            }}
+          >
+            <button
+              type="button"
+              onClick={handleOpenDialog}
+              style={{
+                borderWidth: 2,
+                borderStyle: 'solid',
+                borderColor: 'green',
+                height: 45,
+                marginTop: 30,
+                marginLeft: '5%',
+                marginRight: '1%',
+                width: '10%',
+                paddingLeft: 0,
+                paddingRight: 0,
+              }}
+            >
+              Browse file
+            </button>
+            <div
+              style={{
+                borderWidth: 2,
+                borderStyle: 'solid',
+                borderColor: 'black',
+                height: 45,
+                lineHeight: 2.5,
+                marginTop: 30,
+                marginBottom: 10,
+                width: '40%',
+              }}
+            >
+              {file && file.name}
+            </div>
+            <button
+              style={{
+                borderWidth: 2,
+                borderStyle: 'solid',
+                borderColor: 'red',
+                height: 45,
+                marginTop: 30,
+                marginLeft: '1%',
+                marginRight: '5%',
+                paddingLeft: 20,
+                paddingRight: 20,
+              }}
+              onClick={handleRemoveFile}
+            >
+              Remove
+            </button>
+          </aside>
+        )}
+      </CSVReader>
+    </>
+  );
+}
