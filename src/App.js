@@ -146,10 +146,10 @@ function App() {
 
   const [selected, setSelected] = useState(null); // (1)
   const [query, setQuery] = useState({}); // (2)
-  const [jobs, setJobs] = useState([]); // (3)
-  const [filteredJobs, setFilteredJobs] = useState([]); // (4)
+  const [jobs, setJobs] = useState({}); // (3)
+  const [filteredJobs, setFilteredJobs] = useState({}); // (4)
   const fields = ['English', 'Spanish', 'Locations', 'Shift', 'Weekend'] // (5)
-  const options = [['Non', 'Basic', 'Intermediate', 'Advanced'],['No','Yes'],[],['Morning','Afternoon','Night'],['No','Yes']] //TODO Locations
+  const options = [['None', 'Basic', 'Intermediate', 'Advanced'],['No','Yes'],[],['Morning','Afternoon','Night'],['No','Yes']] //TODO Locations
 
   return (
     <React.Fragment>
