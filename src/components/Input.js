@@ -8,23 +8,42 @@ export const Input = ({options, field, query, setQuery}) => {
         <h1 className="w-5/6 mb-5 text-2xl">
           {field}
         </h1>
-        <div className="flex flex-wrap text-left">
-        {options.map((option) => 
-        (<div style={{marginRight:10}}><h4>{option}</h4>
-        <input 
-          /*className="w-5/6 h-16 border rounded-2xl mb-10" 
-          onChange={event => {
-            let queryCopy = {...query};
-            queryCopy[field] = event.target.value;
-            setQuery(queryCopy);
-          }}
-          value={query[field]}
-          placeholder={field}*/
-          type="checkbox"
-        />
-        </div>))}
+        <div className="flex flex-wrap justify-start w-5/6">
+          {options.map((option) => 
+          (<div className="flex border flex-col justify-center align-center items-center w-1/4 p-2">
+              <input 
+                /*className="w-5/6 h-16 border rounded-2xl mb-10" 
+                onChange={event => {
+                  let queryCopy = {...query};
+                  queryCopy[field] = event.target.value;
+                  setQuery(queryCopy);
+                }}
+                value={query[field]}
+                placeholder={field}*/
+                type="checkbox"
+                onChange={() => {
+                  if (query == null || query[field] == null || !query[field].includes(option)) {
+                    let newArr;
+                    if (query[field] != null) {
+                      newArr = query[field].concat([option]);
+                    } else {
+                      newArr = [option];
+                    }
+                    let newQuery = {... query};
+                    newQuery[field] = newArr;
+                    setQuery(newQuery);
+                  } else if (query[field].includes(option)) {
+                    let newArr = query[field].filter((value) => value != option)
+                    let newQuery = {... query};
+                    newQuery[field] = newArr;
+                    setQuery(newQuery)
+                  } 
+                }}
+              />
+              <h4>{option}</h4>
+          </div>))}
         </div>
-       
+        <br></br>
       </React.Fragment>
     );
   }
