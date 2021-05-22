@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Input field component (english, location, shift, etc.)
 export const Input = ({options, field, query, setQuery}) => {
@@ -20,6 +20,7 @@ export const Input = ({options, field, query, setQuery}) => {
                 }}
                 value={query[field]}
                 placeholder={field}*/
+                checked={((query[field] != null) && (query[field].includes(option))) ? "checked" : undefined}
                 type="checkbox"
                 onChange={() => {
                   if (query == null || query[field] == null || !query[field].includes(option)) {
