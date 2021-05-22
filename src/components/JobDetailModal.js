@@ -13,9 +13,13 @@ export const JobDetailModal = ({selected, setSelected}) => {
         </div>
         <div className="w-5/6 text-2xl flex items-start justify-start mb-5">English Level:</div>
         <div className="w-5/6 h-auto font-sans text-1xl mb-2">{capitalize(selected.english)}</div>
+        <div className="w-5/6 text-2xl flex items-start justify-start mb-5">Bilingual:</div>
+        <div className="w-5/6 h-auto font-sans text-1xl mb-2">{capitalize(selected.bilingual.toString())}</div>
         <div className="w-5/6 text-2xl flex items-start justify-start mb-5">Shifts:</div>
         <div className="w-5/6 h-auto font-sans text-1xl mb-2">{selected.shifts.map((shift, index) => 
               (index === selected.shifts.length - 1 ? capitalize(shift) : capitalize(shift) + ", "))}</div>
+        <div className="w-5/6 text-2xl flex items-start justify-start mb-5">Weekend Shifts:</div>
+        <div className="w-5/6 h-auto font-sans text-1xl mb-2">{capitalize(selected.weekend.toString())}</div>
         <div className="w-5/6 text-2xl flex items-start justify-start mb-5">Industry:</div>
         <div className="w-5/6 h-auto font-sans text-1xl mb-2">{selected.industry}</div>
         <div className="w-5/6 text-2xl flex items-start justify-start mb-5">Locations:</div>

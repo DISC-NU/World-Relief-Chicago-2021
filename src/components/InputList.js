@@ -3,7 +3,11 @@ import { Input } from './Input';
 
 // List of all input fields to filter by (LHS of app screen)
 export const InputList = ({options,fields, jobs, setFilteredJobs, query, setQuery}) => {
-  console.log(options);
+
+    const capitalize = (s) => {
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
     return (
       <React.Fragment>
         {fields.map((field, index) => (
@@ -17,40 +21,40 @@ export const InputList = ({options,fields, jobs, setFilteredJobs, query, setQuer
             let filteredJobs = []; 
   
             // Loop over each job, add to `filteredJobs` if appropriate
-            jobs.map((job) => {
-              let jobData = job.data;
+            Object.values(jobs).map((job) => {
               let validJob = true;
   
               // Loop over each input field; determine if it matches w/ the current job data
               for (const [key, value] of Object.entries(query)) {
-                if (value === "") {
+                if (value.length === 0) {
                   continue; // Keys that were potentially cleared out from before
                 }
   
                 let keyParsed = key.toLowerCase();
   
                 if (keyParsed === 'english') {
-                  if (value.toLowerCase() !== jobData[2].toLowerCase()) {
+                  if (!value.includes(capitalize(job.english))) {
                     validJob = false;
                     break;
                   }
-                } else if (keyParsed === 'spanish') {
-                  if (jobData[3].toLowerCase() !== value.toLowerCase()) {
+                } else if (keyParsed === 'billingual') {
+                  let bilingual;
+                  job.bilingual ? bilingual = 'Yes' : bilingual = 'No';
+
+                  if (value[0] === 'Yes' && bilingual === 'No') {
                     validJob = false;
                     break;
                   }
-                } else if (keyParsed === 'locations') {
-                  if (!jobData[4].includes(value)) { // TODO: make case-insensitive
-                    validJob = false;
-                    break;
-                  }
-                } else if (keyParsed === 'shift') {
-                  if (!jobData[5].includes(value.toLowerCase())) {
+                } else if (keyParsed === 'shifts') {
+                  if (!job.shifts.includes(value.toLowerCase())) {
                     validJob = false;
                     break;
                   }
                 } else if (keyParsed === 'weekend') {
-                  if (jobData[6].toLowerCase() !== value.toLowerCase()) {
+                  let weekend;
+                  job.weekend ? weekend = 'Yes' : weekend = 'No';
+
+                  if (value[0] === 'Yes' && weekend === 'No') {
                     validJob = false;
                     break;
                   }
@@ -60,7 +64,7 @@ export const InputList = ({options,fields, jobs, setFilteredJobs, query, setQuer
               }
   
               if (validJob) {
-                filteredJobs.push(job);
+                filteredJobs[job.company] = job;
               }
   
               setFilteredJobs(filteredJobs);
