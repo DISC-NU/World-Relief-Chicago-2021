@@ -1,8 +1,11 @@
 import './App.css';
-import React, { useState, useEffect } from 'react';
-import { fields, englishMapping, shiftMapping, jobs } from './data.js';
+import React, { useState } from 'react';
+import { CSVToJSON } from './components/FileUpload';
+import { JobDetailModal } from './components/JobDetailModal';
+import { InputList } from './components/InputList';
+import { JobList } from './components/JobList';
 // This is needed when we uncomment the useEffect
-import { Loader } from "@googlemaps/js-api-loader";
+// import { Loader } from "@googlemaps/js-api-loader";
 
 
 // Origin and Destination are Just Specific Address Strings
@@ -32,65 +35,6 @@ const shiftMapping2 = {
   "day": 0, 
   "afternoon": 1,
   "night": 2
-}
-
-// Job component (individual job)
-const Job = ({job, setSelected}) => {
-  return (
-    <div 
-      onClick={() => setSelected(job)}
-      className="w-5/6 h-16 border rounded-2xl flex items-center justify-center mt-2">
-      {job.company}, {job.locations.length > 1 ? "Multiple locations" : job.locations[0]}
-    </div>
-  );
-}
-
-// List of jobs (display on RHS of app screen)
-const JobList = ({jobList, setSelected}) => {
-  console.log(jobList);
-  return (
-    Object.keys(jobList).length === 0 
-    ? 
-    <text>No matching jobs!</text>
-    :
-    <React.Fragment>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    {Object.values(jobList).map((job, index) => {
-      return <Job id={index} job={job} setSelected={setSelected} key={index}/>
-    })}
-    </React.Fragment>
-  );
-}
-
-// Input field component (english, location, shift, or industry field)
-const Input = ({field, query, setQuery}) => {
-  return (
-    <React.Fragment>
-      <h1 className="w-5/6 mb-5 text-2xl">
-        {field}
-      </h1>
-      <input 
-        className="w-5/6 h-16 border rounded-2xl mb-10" 
-        onChange={event => {
-          let queryCopy = {...query};
-          queryCopy[field] = event.target.value;
-          setQuery(queryCopy);
-        }}
-        value={query[field]}
-        placeholder={field}
-        type="text"
-      />
-    </React.Fragment>
-  );
 }
 
 // Checkbox component for shifts
@@ -129,108 +73,6 @@ const Checkboxes = ({shifts, setShifts}) => {
   )
 }
 
-// List of all input fields to filter by (LHS of app screen)
-const InputList = ({fields, setFilteredJobs, shifts, setShifts, query, setQuery}) => {
-  return (
-    <React.Fragment>
-      {fields.map((field, index) => (
-        field === "Shift" 
-        ? <Checkboxes shifts={shifts} setShifts={setShifts}/>
-        : <Input id={index} field={field} query={query} setQuery={setQuery} key={index}/>
-      ))}
-      <button 
-        className="w-5/6 h-16 border rounded-2xl mb-10"
-        onClick={() => {
-
-          // Jobs that match all input criteria
-          let filteredJobs = {}; 
-
-          // Loop over each job, add to `filteredJobs` if appropriate
-          Object.values(jobs).map((job) => {
-            let validJob = true;
-
-            // Loop over each input field; determine if it matches w/ the current job data
-            for (const [key, value] of Object.entries(query)) {
-              if (value === "") {
-                continue; // Keys that were potentially cleared out from before
-              }
-
-              let keyParsed = key.toLowerCase();
-
-              if (keyParsed === 'english') {
-                if (englishMapping2[value.toLowerCase()] !== job['english']) {
-                  validJob = false;
-                  break;
-                }
-              } else if (keyParsed === 'locations') {
-                if (!job.locations.includes(value)) { // TODO: make case-insensitive
-                  validJob = false;
-                  break;
-                }
-              } else if (keyParsed === 'industry') {
-                if (value !== job['industry']) { // TODO: make case-insensitive
-                  validJob = false;
-                  break;
-                }
-              } else {
-                continue;
-              }  
-            }
-
-            // check shifts
-            let hasShift = false;
-            shifts.forEach(s => {
-              if (job.shifts.includes(shiftMapping2[s.toLowerCase()])) {
-                hasShift = true;
-              }
-            })
-            if (!hasShift) {
-              validJob = false;
-            }
-
-            if (validJob) {
-              filteredJobs[job.company] = job;
-            }
-
-            setFilteredJobs(filteredJobs);
-          })
-        }}>
-        Filter Jobs
-      </button>
-    </React.Fragment>
-  );
-}
-
-
-// Modal to display specific info for a selected job
-const Modal = ({selected, setSelected}) => {
-  return (
-    <div className="w-11/12 h-5/6 border rounded-lg shadow-2xl flex flex-col items-center">
-      <div className="w-auto font-sans text-3xl mt-5 mb-5">
-        {selected.company}, {selected.locations.length > 1 ? "Multiple Locations" : selected.locations[0]}
-      </div>
-      <div className="w-5/6 text-2xl flex items-start justify-start mb-5">English Level:</div>
-      <div className="w-5/6 h-auto font-sans text-1xl mb-2">{englishMapping[selected.english]}</div>
-      <div className="w-5/6 text-2xl flex items-start justify-start mb-5">Shifts:</div>
-      <div className="w-5/6 h-auto font-sans text-1xl mb-2">{selected.shifts.map((shift, index) => 
-            (index === selected.shifts.length - 1 ? shiftMapping[shift] : shiftMapping[shift] + ", "))}</div>
-      <div className="w-5/6 text-2xl flex items-start justify-start mb-5">Industry:</div>
-      <div className="w-5/6 h-auto font-sans text-1xl mb-2">{selected.industry}</div>
-      <div className="w-5/6 text-2xl flex items-start justify-start mb-5">Locations:</div>
-      <div className="w-5/6 h-auto font-sans text-1xl mb-2">{selected.locations.map((location, index) => 
-            (index === selected.locations.length - 1 ? location : location + ", "))}</div>
-      <div className="w-5/6 text-2xl flex items-start justify-start mb-2">Job Description:</div>
-      <div className="w-5/6 h-4/6 font-sans text-1xl">{selected.notes.description}</div>
-      <div className="w-1/6 h-16 border rounded-md flex items-center justify-center mb-5" 
-           onClick={() => setSelected(null)}>Close</div>
-    </div>
-  );
-}
-import React, { useState } from 'react';
-import { JobList } from './components/JobList';
-import { InputList } from './components/InputList';
-import { JobDetailModal } from './components/JobDetailModal';
-import { CSVToJSON } from './components/FileUpload';
 
 /*
   NOTE: The job list is of the following form:
@@ -268,12 +110,6 @@ import { CSVToJSON } from './components/FileUpload';
 
 function App() {
 
-  const [selected, setSelected] = useState(null);
-  const [query, setQuery] = useState({});
-  const [filteredJobs, setFilteredJobs] = useState(jobs);
-  const [service, setService] = useState(null);
-  const [shifts, setShifts] = useState([]);
-
   // useEffect(()=> {
   //   if (service == null) {
   //     const loader = new Loader({
@@ -290,6 +126,7 @@ function App() {
   //   }
   // },[service])
 
+  /*
   function GetTime(origin, dest) {
     service.getDistanceMatrix({
       origins: [origin],
@@ -297,6 +134,7 @@ function App() {
       travelMode: 'TRANSIT'
     }, (response, status) => {if (status === "OK") console.log(response)})
   }
+  */
   
   /*
     (1) Specific job we have clicked on from the job list on the RHS
@@ -332,8 +170,6 @@ function App() {
                       fields={fields} 
                       jobs={jobs}
                       setFilteredJobs={setFilteredJobs}
-                      shifts={shifts}
-                      setShifts={setShifts}
                       query={query} 
                       setQuery={setQuery}
                     />
