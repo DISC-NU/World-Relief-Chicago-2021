@@ -18,18 +18,20 @@ export const CSVToJSON = ({setJobs, setFilteredJobs}) => {
   // and `filteredJobs` variables in 'App.js'
   const handleOnFileLoad = (data) => {
 
-    // TODO
+    // JSON object to hold data about all jobs
     let jobList = {};
 
     // Remove the 1st entry in the JSON object
     // i.e. the columns at the top of the CSV file, which aren't an actual job
     data.shift();
 
-    // TODO
-    data.map((job, jobIndex) => {
+    // Loop over each job object & parse it into a JSON object containing its correponding data
+    data.map((job) => {
       let currentJob = {};
       let currentJobData = job.data;
 
+      // Loop over each job field (company name, industry, english level, etc.)
+      // and update the JSON object for the current job accordingly
       currentJobData.map((fieldData, index) => {
         let field;
         let fieldDataParsed = fieldData;
@@ -76,9 +78,35 @@ export const CSVToJSON = ({setJobs, setFilteredJobs}) => {
             break;
         }
 
+        /*
+         Add current field to the `currentJob` JSON object, 
+         which will be of the following form:
+
+         {
+           'company': // company name,
+           'industry': // industry name,
+           'english': {basic/intermediate/advanced}
+           < etc. >
+         }
+      
+        */
         currentJob[field] = fieldDataParsed;
       })
   
+
+      /*
+       Add the `currentJob` JSON object to our `jobList` JSON object, 
+       which will be of the following form:
+
+       {
+        'Advocate Christ Medical Center': { ... },
+        'Amazon': { ... },
+        'Aramark': { ... },
+
+        < etc. >
+       }
+
+       */
       jobList[job.data[0]] = currentJob;
     })
 

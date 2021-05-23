@@ -39,6 +39,7 @@ const shiftMapping2 = {
 
 // Checkbox component for shifts
 const Checkboxes = ({shifts, setShifts}) => {
+  
   //MAKE MORE GENERALIZABLE FOR ALL INPUT FIELDS
   const toggleCheckbox = changeEvent => {
     const { name } = changeEvent.target;
@@ -72,40 +73,7 @@ const Checkboxes = ({shifts, setShifts}) => {
     </React.Fragment>
   )
 }
-
-
-/*
-  NOTE: The job list is of the following form:
-    jobList = {
-      {
-        data: [
-          Company Name (index 0),
-          Industry (1),
-          English Level (2),
-          Bilingual/Spanish Boolean (3),
-          Locations (4),
-          Shifts - i.e. Morning, Afternoon, Night (5),
-          Weekend Shift Boolean (6),
-          Description/Notes (7)
-        ]
-      }
-      ...
-      ...
-    }
-
-    -So basically it's a JSON object consisting of many nested JSON objects within it
-    -Each nested JSON object represents a job entry 
-    & the 'data' field of the object is an 8-element array with specific job information
-    -Thus, to loop over this list of all jobs and "console.log" fields for each job, we would do the following (pseudocode):
-
-      jobList.map((job) => {
-        const jobData = job.data;
-        for (let i = 0; i < 8; i++) {
-          console.log(jobData[i]);
-        }
-      })
-  */
-
+ 
 // Main app: encapsulates input fields, (filtered) job list, & modals for individual jobs
 
 function App() {
@@ -139,17 +107,26 @@ function App() {
   /*
     (1) Specific job we have clicked on from the job list on the RHS
     (2) Query based on inputs on the LHS (i.e. tells us what parameters to filter by)
+        |__ Default matching schema is that all fields must match
     (3) List of all jobs < SEE NOTE AT TOP OF FILE >
     (4) List of jobs, filtered down by query in (2)
     (5) Fields to filter jobs by
   */
 
   const [selected, setSelected] = useState(null); // (1)
-  const [query, setQuery] = useState({}); // (2)
+  const [query, setQuery] = useState({
+    'Matching Schema': ["Match All Fields (Default)"]
+  }); // (2)
   const [jobs, setJobs] = useState([]); // (3)
   const [filteredJobs, setFilteredJobs] = useState([]); // (4)
-  const fields = ['English', 'Shifts', 'Billingual', 'Weekend'] // (5)
-  const options = [['None', 'Basic', 'Intermediate', 'Advanced'],['Morning','Afternoon','Night'], ['Yes'],['Yes']] //TODO Locations
+  const fields = ['Matching Schema', 'English', 'Shifts', 'Billingual', 'Weekend']; // (5)
+  const options = [
+    ['Match All Fields (Default)', 'Match At Least One Field'], 
+    ['None', 'Basic', 'Intermediate', 'Advanced'],
+    ['Morning','Afternoon','Night'], 
+    ['Yes'],
+    ['Yes']
+  ]; //TODO Locations
   useEffect(() => {
     console.log("THIS THE QUERY: ", query);
   },[query])

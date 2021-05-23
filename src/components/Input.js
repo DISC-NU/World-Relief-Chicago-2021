@@ -8,17 +8,31 @@ export const Input = ({options, field, query, setQuery}) => {
           {field}
         </h1>
         <div className="flex flex-wrap justify-start w-5/6">
-          {options.map((option) => 
+          {options.map((option, index) => 
           (<div className="flex border flex-col justify-center align-center items-center w-1/4 p-2">
-              <input 
-                /*className="w-5/6 h-16 border rounded-2xl mb-10" 
-                onChange={event => {
-                  let queryCopy = {...query};
-                  queryCopy[field] = event.target.value;
-                  setQuery(queryCopy);
+              {field === "Matching Schema"
+              ?           // Dispatch based on whether the field is the "Matching Schema" ...
+              <input
+                checked={((query[field] != null) && (query[field].includes(option))) ? "checked" : undefined}
+                id={index}
+                name="matchingSchema"
+                type="checkbox"
+                onChange={() => {
+                  if (query == null || query[field] == null || !query[field].includes(option)) {
+                    let newArr = [option];
+                    let newQuery = {... query};
+                    newQuery[field] = newArr;
+                    setQuery(newQuery);
+                  } else if (query[field].includes(option)) {
+                    let newArr = query[field].filter((value) => value != option)
+                    let newQuery = {... query};
+                    newQuery[field] = newArr;
+                    setQuery(newQuery)
+                  } 
                 }}
-                value={query[field]}
-                placeholder={field}*/
+              />
+              :       // ... or any other parameter
+              <input 
                 checked={((query[field] != null) && (query[field].includes(option))) ? "checked" : undefined}
                 type="checkbox"
                 onChange={() => {
@@ -40,6 +54,8 @@ export const Input = ({options, field, query, setQuery}) => {
                   } 
                 }}
               />
+              }
+              
               <h4>{option}</h4>
           </div>))}
         </div>

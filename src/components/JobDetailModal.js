@@ -2,10 +2,13 @@ import React from 'react';
 
 // Modal to display specific info for a selected job
 export const JobDetailModal = ({selected, setSelected}) => {
+
+    // Capitalize a word (1st char uppercase, all else lowercase)
     const capitalize = (s) => {
-      return s.charAt(0).toUpperCase() + s.slice(1);
+      return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
     }
 
+    // Display information about each field/parameter for a given job
     return (
       <div className="w-11/12 h-5/6 border rounded-lg shadow-2xl flex flex-col items-center">
         <div className="w-auto font-sans text-3xl mt-5 mb-5">
