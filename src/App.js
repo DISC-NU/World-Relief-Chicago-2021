@@ -5,7 +5,7 @@ import { JobDetailModal } from './components/JobDetailModal';
 import { InputList } from './components/InputList';
 import { JobList } from './components/JobList';
 // This is needed when we uncomment the useEffect
-// import { Loader } from "@googlemaps/js-api-loader";
+import { Loader } from "@googlemaps/js-api-loader";
 
 
 // Origin and Destination are Just Specific Address Strings
@@ -77,32 +77,60 @@ const Checkboxes = ({shifts, setShifts}) => {
 // Main app: encapsulates input fields, (filtered) job list, & modals for individual jobs
 
 function App() {
+  const [service, setService] = useState(null);
+  // const [result, setResult] = useState(null);
+  useEffect(()=> {
+    if (service == null) {
+      const loader = new Loader({
+        apiKey: process.env.REACT_APP_API_KEY,
+        version: "weekly"
+      });
+      loader.load().then(() => {
+        setService(new window.google.maps.DistanceMatrixService());
+      })
+    } else {
+      let origin = '2110 W Greenleaf Ave, Chicago, IL 60645'
+      let dest = 'Chinatown, Chicago, IL 60616'
+      realGetTime(origin, dest).then(data => {
+        console.log(data)
+      })
+    }
+  },[service])
 
   // useEffect(()=> {
-  //   if (service == null) {
-  //     const loader = new Loader({
-  //       apiKey: process.env.REACT_APP_API_KEY,
-  //       version: "weekly"
-  //     });
-  //     loader.load().then(() => {
-  //       setService(new window.google.maps.DistanceMatrixService());
-  //     })
-  //   } else {
-  //     let origin = '2110 W Greenleaf Ave, Chicago, IL 60645'
-  //     let dest = 'Chinatown, Chicago, IL 60616'
-  //   GetTime(origin, dest)
-  //   }
-  // },[service])
+  //   console.log("THIS IS THE GOOGLE:", result)
+  // },[result])
 
-  /*
-  function GetTime(origin, dest) {
+
+  const realGetTime = async (origin, dest) => {
+    const result = await getTime(origin, dest);
+    return result
+  }
+
+  const getTime = (origin, dest) => new Promise((resolve, reject) => {
     service.getDistanceMatrix({
       origins: [origin],
       destinations: [dest],
       travelMode: 'TRANSIT'
-    }, (response, status) => {if (status === "OK") console.log(response)})
-  }
+    }, (response, status) => {
+      if (status === "OK") {
+        resolve(response);
+      } else {
+        reject(response);
+      }
+    })
+  })
+
+
+
+  /*
+  Some function that when you hit search:
+  all of the other filters first, then once it has that list of jobs,
+  it loops through the list of jobs and calls get time on each pair (the start + each valid job)
+  And then if getTime(origin, pos) < limit, display it 
+  When they click the modal, they need to see the distance
   */
+  
   
   /*
     (1) Specific job we have clicked on from the job list on the RHS
@@ -117,7 +145,7 @@ function App() {
   const [query, setQuery] = useState({}); // (2)
   const [jobs, setJobs] = useState([]); // (3)
   const [filteredJobs, setFilteredJobs] = useState([]); // (4)
-  const [location, setLocation] = useState({})
+  const [location, setLocation] = useState({place: '2110 W Greenleaf Ave, Chicago, IL 60645', limit: '9 hr 7 mins'})
   const fields = ['Matching Schema', 'English', 'Shifts', 'Billingual', 'Weekend']; // (5)
   const options = [
     ['Match At Least One Field'], 
@@ -132,6 +160,10 @@ function App() {
     console.log("LOCATION STUFF: ", location);
   },[query, location])
 
+  useEffect(()=> {
+    console.log("Please rerender properly.")
+  },[filteredJobs])
+
   function capitalize(s) {
     return s.charAt(0).toUpperCase() + s.slice(1);
   }
@@ -141,15 +173,17 @@ function App() {
     return limitArr[0] * 3600 + limitArr[2] * 60
   }
 
+  console.log("PARSE LIMIT:", parseLimit("3 hrs 6 mins"))
+
   function handleLocation(e) {
     let newQuery = {...location}
-    newQuery["location"] = e.target.value;
+    newQuery["place"] = e.target.value;
     setLocation(newQuery)
   }
 
   function handleLimit(e) {
     let newQuery = {...location}
-    newQuery["limit"] = e.target.value;
+    newQuery["limit"] = parseLimit(e.target.value);
     setLocation(newQuery)
   }
 
@@ -257,7 +291,7 @@ function App() {
                     <div className="flex justify-start align-start w-5/6 h-auto flex-col">
                       <h1 className="w-5/6 mb-2 text-2xl">Location</h1>
                         <input type="text" placeholder="Starting location..." className="border"
-                            value={location.location || null}
+                            value={location.place || null}
                             onChange={handleLocation}
                             > 
                         </input>
@@ -272,7 +306,13 @@ function App() {
           className="w-5/6 h-16 border rounded-2xl mb-10"
           onClick={() => {
             // Jobs that match all input criteria
+            // console.log("WE CLICKED THIS")
+            // console.log("Location:", location)
+            // console.log("Location Place:", location.place)
+            // console.log("Location Limit:", location.limit)
             let filteredJobs = []; 
+            let realFilteredJobs = [];
+
             // Loop over each job, add to `filteredJobs` if appropriate, 
             // dispatching based on matching all fields or at least one field
             Object.values(jobs).map((job) => {
@@ -289,8 +329,62 @@ function App() {
                   filteredJobs[job.company] = job;
                 }
               }
-              setFilteredJobs(filteredJobs);
+              // let realFilteredJobs;
+              // if (location != null && location.place != null && location.limit != null) {
+              //   console.log("OBJECT VALUE FILTERED THING:", Object.values(filteredJobs))
+              //   realFilteredJobs = Object.values(filteredJobs).filter(job => {
+              //     console.log("THIS IS THE JOB:", job)
+              //     for (let place of job.locations) {
+              //       console.log("THIS IS THE PLACE:", place)
+              //       realGetTime(location.place, place).then(data => {
+              //         console.log("IS THIS HAPPENING?")
+              //         console.log(data);
+              //         for (let row of data.rows) {
+              //           for (let element of row.elements) {
+              //             console.log("It takes:", element.duration.value)
+              //             console.log("To get from start to ", place)
+              //             if (element.duration.value <= location.limit) {
+              //               return true;
+              //             }
+              //           }
+              //         }
+              //       })
+              //     }
+              //     return false;
+              //   })
+              // } else {
+              //   realFilteredJobs = filteredJobs
+              // }
             })
+            console.log("What we expected it to look like:", filteredJobs)
+            // setFilteredJobs(filteredJobs);
+            if (location != null && location.place != null && location.limit != null) {
+              // console.log("OBJECTS VALUES:", filteredJobs)
+              Object.values(filteredJobs).forEach(job => {
+                console.log("JOB TESTING", job)
+                for (let place of job.locations) {
+                  // console.log("THIS IS A PLACE:", place)
+                  realGetTime(location.place, place).then(data => {
+                    console.log(data)
+                    for (let row of data.rows) {
+                      for (let element of row.elements) {
+                        console.log("THE UPPER LIMIT WAS IN SECS:", parseLimit(location.limit))
+                        console.log("THE DURATION WAS:", element.duration.value)
+                        if (element.duration.value <= parseLimit(location.limit)) {
+                          console.log("DURATION:", element.duration.value)
+                          console.log("LIMIT:", parseLimit(location.limit))
+                          realFilteredJobs[job.company] = job
+                        }
+                      }
+                    }
+                  })
+              }})
+              console.log("WHAT DOES RFJ LOOK LIKE AT THE END", realFilteredJobs)
+              setFilteredJobs(realFilteredJobs);
+            } else {
+              realFilteredJobs = filteredJobs
+              setFilteredJobs(realFilteredJobs);
+            }
           }}>
           Filter Jobs
         </button>

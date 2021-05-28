@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Modal to display specific info for a selected job
 export const JobDetailModal = ({selected, setSelected}) => {
@@ -7,6 +7,10 @@ export const JobDetailModal = ({selected, setSelected}) => {
     const capitalize = (s) => {
       return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
     }
+
+    useEffect(() => {
+      console.log("We changed")
+    },[selected])
 
     // Display information about each field/parameter for a given job
     return (
