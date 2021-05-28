@@ -148,6 +148,7 @@ function App() {
   const [query, setQuery] = useState({}); // (2)
   const [jobs, setJobs] = useState([]); // (3)
   const [filteredJobs, setFilteredJobs] = useState([]); // (4)
+  const [location, setLocation] = useState("")
   const fields = ['English', 'Shifts', 'Billingual', 'Weekend'] // (5)
   const options = [['None', 'Basic', 'Intermediate', 'Advanced'],['Morning','Afternoon','Night'], ['Yes'],['Yes']] //TODO Locations
   useEffect(() => {
@@ -155,29 +156,27 @@ function App() {
 
   },[query])
 
+  useEffect(() => {
+    console.log("LOCATION STUFF: ", location);
+
+  },[location])
+
   const capitalize = (s) => {
     return s.charAt(0).toUpperCase() + s.slice(1);
   }
 
 
-  const Location = () => {
-    return (
-      <div className="flex justify-start align-start w-5/6 h-auto flex-col">
-          <h1 className="w-5/6 mb-2 text-2xl">Location</h1>
-          <input type="text" placeholder="Starting location..." className="border"
-              onChange={(value) => {
-                let newQuery = {...query}
-                newQuery["location"] = value;
-                setQuery(newQuery)
-              }}> 
-          </input>
-          <input type="text" placeholder="e.g. type 3 hrs 2 min" className="border"></input>
-          <br></br>
-      </div>
-    )
+  function handleLocation(e) {
+    let newQuery = {...location}
+    newQuery["location"] = e.target.value;
+    setLocation(newQuery)
   }
 
-  
+  function handleLimit(e) {
+    let newQuery = {...location}
+    newQuery["limit"] = e.target.value;
+    setLocation(newQuery)
+  }
 
   return (
     <React.Fragment>
@@ -205,7 +204,20 @@ function App() {
                       query={query} 
                       setQuery={setQuery}
                     />
-                    <Location></Location>
+                    <div className="flex justify-start align-start w-5/6 h-auto flex-col">
+                      <h1 className="w-5/6 mb-2 text-2xl">Location</h1>
+                        <input type="text" placeholder="Starting location..." className="border"
+                            value={location.location || null}
+                            onChange={handleLocation}
+                            > 
+                        </input>
+                        <input type="text" placeholder="e.g. type 3 hrs 2 min" className="border"
+                        value={location.limit || null}
+                         onChange={handleLimit}
+                        > 
+                        </input>
+                      <br></br>
+                    </div>
 
                     
           <button 
