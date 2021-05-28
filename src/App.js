@@ -114,15 +114,13 @@ function App() {
   */
 
   const [selected, setSelected] = useState(null); // (1)
-  const [query, setQuery] = useState({
-    'Matching Schema': ["Match All Fields (Default)"]
-  }); // (2)
+  const [query, setQuery] = useState({}); // (2)
   const [jobs, setJobs] = useState([]); // (3)
   const [filteredJobs, setFilteredJobs] = useState([]); // (4)
   const [location, setLocation] = useState({})
   const fields = ['Matching Schema', 'English', 'Shifts', 'Billingual', 'Weekend']; // (5)
   const options = [
-    ['Match All Fields (Default)', 'Match At Least One Field'], 
+    ['Match At Least One Field'], 
     ['None', 'Basic', 'Intermediate', 'Advanced'],
     ['Morning','Afternoon','Night'], 
     ['Yes'],
