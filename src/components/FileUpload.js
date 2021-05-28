@@ -129,6 +129,7 @@ export const CSVToJSON = ({setJobs, setFilteredJobs}) => {
       buttonRef.current.removeFile(e);
     }
   };
+  
 
   return (
     <>

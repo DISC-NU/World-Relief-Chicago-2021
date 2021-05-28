@@ -14,6 +14,14 @@ export const InputList = ({options,fields, jobs, setFilteredJobs, query, setQuer
       )
     }
 
+  console.log(options);
+  
+
+  function parseLimit (limit) {
+    let limitArr = limit.split(' ');
+    return limitArr[0] * 3600 + limitArr[2] * 60
+  }
+  console.log(parseLimit("3 hrs 2 min"))
     // Capitalize a word (1st char uppercase, all else lowercase)
     const capitalize = (s) => {
       return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
@@ -102,6 +110,7 @@ export const InputList = ({options,fields, jobs, setFilteredJobs, query, setQuer
 
       return false;
     }
+
 
     return (
       <React.Fragment>

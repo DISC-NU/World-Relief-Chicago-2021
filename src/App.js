@@ -119,6 +119,7 @@ function App() {
   }); // (2)
   const [jobs, setJobs] = useState([]); // (3)
   const [filteredJobs, setFilteredJobs] = useState([]); // (4)
+  const [location, setLocation] = useState("")
   const fields = ['Matching Schema', 'English', 'Shifts', 'Billingual', 'Weekend']; // (5)
   const options = [
     ['Match All Fields (Default)', 'Match At Least One Field'], 
@@ -129,7 +130,30 @@ function App() {
   ]; //TODO Locations
   useEffect(() => {
     console.log("THIS THE QUERY: ", query);
+
   },[query])
+
+  useEffect(() => {
+    console.log("LOCATION STUFF: ", location);
+
+  },[location])
+
+  const capitalize = (s) => {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+
+  function handleLocation(e) {
+    let newQuery = {...location}
+    newQuery["location"] = e.target.value;
+    setLocation(newQuery)
+  }
+
+  function handleLimit(e) {
+    let newQuery = {...location}
+    newQuery["limit"] = e.target.value;
+    setLocation(newQuery)
+  }
 
   return (
     <React.Fragment>
@@ -157,6 +181,81 @@ function App() {
                       query={query} 
                       setQuery={setQuery}
                     />
+                    <div className="flex justify-start align-start w-5/6 h-auto flex-col">
+                      <h1 className="w-5/6 mb-2 text-2xl">Location</h1>
+                        <input type="text" placeholder="Starting location..." className="border"
+                            value={location.location || null}
+                            onChange={handleLocation}
+                            > 
+                        </input>
+                        <input type="text" placeholder="e.g. type 3 hrs 2 min" className="border"
+                        value={location.limit || null}
+                         onChange={handleLimit}
+                        > 
+                        </input>
+                      <br></br>
+                    </div>
+
+                    
+          <button 
+          className="w-5/6 h-16 border rounded-2xl mb-10"
+          onClick={() => {
+  
+            // Jobs that match all input criteria
+            let filteredJobs = []; 
+  
+            // Loop over each job, add to `filteredJobs` if appropriate
+            Object.values(jobs).map((job) => {
+              let validJob = true;
+  
+              // Loop over each input field; determine if it matches w/ the current job data
+              for (const [key, value] of Object.entries(query)) {
+                if (value.length === 0) {
+                  continue; // Keys that were potentially cleared out from before
+                }
+  
+                let keyParsed = key.toLowerCase();
+  
+                if (keyParsed === 'english') {
+                  if (!value.includes(capitalize(job.english))) {
+                    validJob = false;
+                    break;
+                  }
+                } else if (keyParsed === 'billingual') {
+                  let bilingual;
+                  job.bilingual ? bilingual = 'Yes' : bilingual = 'No';
+
+                  if (value[0] === 'Yes' && bilingual === 'No') {
+                    validJob = false;
+                    break;
+                  }
+                } else if (keyParsed === 'shifts') {
+                  if (!job.shifts.includes(value.toLowerCase())) {
+                    validJob = false;
+                    break;
+                  }
+                } else if (keyParsed === 'weekend') {
+                  let weekend;
+                  job.weekend ? weekend = 'Yes' : weekend = 'No';
+
+                  if (value[0] === 'Yes' && weekend === 'No') {
+                    validJob = false;
+                    break;
+                  }
+                } else {
+                  continue;
+                }  
+              }
+  
+              if (validJob) {
+                filteredJobs[job.company] = job;
+              }
+  
+              setFilteredJobs(filteredJobs);
+            })
+          }}>
+          Filter Jobs
+        </button>
                   </div>
                   <div 
                     className="w-6/12 h-full border rounded-lg shadow-2xl flex flex-col justify-center items-center overflow-y-scroll">
