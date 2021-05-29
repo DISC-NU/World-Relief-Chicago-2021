@@ -217,8 +217,8 @@ function App() {
                 World Relief Chicago Job Match
               </div>
               <CSVToJSON setJobs={setJobs} setFilteredJobs={setFilteredJobs}></CSVToJSON>
-              <div className="w-full h-full flex justify-around flex-row items-center overflow-y-scroll">
-                  <div className="w-5/12 h-full border rounded-lg shadow-2xl flex flex-col items-center justify-start">
+              <div className="w-full h-full flex justify-around flex-row items-center">
+                  <div className="w-5/12 h-auto border rounded-lg shadow-2xl flex flex-col items-center justify-start overflow-y-auto">
                     <br></br>
                     <br></br>
                     <InputList 
@@ -243,15 +243,16 @@ function App() {
                         </input>
                       <br></br>
                     </div>
-        <button 
-          className="w-5/6 h-16 border rounded-2xl mb-10"
-          onClick={handleClick}>
-          Filter Jobs
-        </button>
-                  </div>
+                <button 
+                  className="w-5/6 h-16 border rounded-2xl mb-10"
+                  onClick={handleClick}>
+                  Filter Jobs
+                </button>
+              </div>
                   <div 
                     className="w-6/12 h-full border rounded-lg shadow-2xl flex flex-col justify-center items-center overflow-y-auto">
                     <JobList jobList={filteredJobs} setSelected={setSelected}/>
+                    
                   </div>
               </div>
           </React.Fragment>

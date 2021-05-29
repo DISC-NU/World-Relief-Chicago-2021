@@ -15,7 +15,7 @@ export const JobDetailModal = ({selected, setSelected}) => {
 
     // Display information about each field/parameter for a given job
     return (
-      <div className="w-11/12 h-5/6 border rounded-lg shadow-2xl flex flex-col items-center">
+      <div className="w-11/12 h-5/6 border rounded-lg shadow-2xl flex flex-col items-center overflow-y-scroll">
         <div className="w-auto font-sans text-3xl mt-5 mb-5">
           {selected.company}: {selected.locations.length > 1 ? "Multiple Locations" : selected.locations[0]}
         </div>

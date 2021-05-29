@@ -18,12 +18,12 @@ export const JobList = ({jobList, setSelected}) => {
         <div>No matching jobs!</div>
         :
         <div className="overflow-y-scroll w-full h-auto">
-        <div className="text-center">Available Jobs:</div>
-        {Object.values(jobList).map((job, index) => {
-          return (<>
-          <Job id={index} key={index} job={job} setSelected={setSelected}/>
-          </>)
-        })}
+          <div className="text-center">Available Jobs:</div>
+          {Object.values(jobList).map((job, index) => {
+            return (<>
+            <Job id={index} key={index} job={job} setSelected={setSelected}/>
+            </>)
+          })}
         </div>
     );
   }
