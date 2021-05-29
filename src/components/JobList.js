@@ -13,28 +13,17 @@ export const JobList = ({jobList, setSelected}) => {
     },[zero])
 
     return (
-      <div>
-        {
+        
         zero ? 
         <div>No matching jobs!</div>
         :
-        <React.Fragment>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
+        <div className="overflow-y-scroll w-full h-auto">
+        <div className="text-center">Available Jobs:</div>
         {Object.values(jobList).map((job, index) => {
-          return <Job id={index} key={index} job={job} setSelected={setSelected}/>
+          return (<>
+          <Job id={index} key={index} job={job} setSelected={setSelected}/>
+          </>)
         })}
-        </React.Fragment>
-          }
-      </div>
-      
+        </div>
     );
   }

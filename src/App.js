@@ -217,7 +217,7 @@ function App() {
                 World Relief Chicago Job Match
               </div>
               <CSVToJSON setJobs={setJobs} setFilteredJobs={setFilteredJobs}></CSVToJSON>
-              <div className="w-full h-full flex justify-around flex-row items-center">
+              <div className="w-full h-full flex justify-around flex-row items-center overflow-y-scroll">
                   <div className="w-5/12 h-full border rounded-lg shadow-2xl flex flex-col items-center justify-start">
                     <br></br>
                     <br></br>
@@ -250,7 +250,7 @@ function App() {
         </button>
                   </div>
                   <div 
-                    className="w-6/12 h-full border rounded-lg shadow-2xl flex flex-col justify-center items-center overflow-y-scroll">
+                    className="w-6/12 h-full border rounded-lg shadow-2xl flex flex-col justify-center items-center overflow-y-auto">
                     <JobList jobList={filteredJobs} setSelected={setSelected}/>
                   </div>
               </div>
