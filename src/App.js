@@ -1,58 +1,10 @@
 import './App.css';
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CSVToJSON } from './components/FileUpload';
 import { JobDetailModal } from './components/JobDetailModal';
 import { InputList } from './components/InputList';
 import { JobList } from './components/JobList';
 import { Loader } from "@googlemaps/js-api-loader";
-
-
-const englishMapping2 = {
-  "none": 0,
-  "basic": 1,
-  "intermediate": 2,
-  "advanced": 3
-}
-const shiftMapping2 = {
-  "day": 0, 
-  "afternoon": 1,
-  "night": 2
-}
-const Checkboxes = ({shifts, setShifts}) => {
-  
-  //MAKE MORE GENERALIZABLE FOR ALL INPUT FIELDS
-  const toggleCheckbox = changeEvent => {
-    const { name } = changeEvent.target;
-    let newShifts = [...shifts]
-    if (newShifts.includes(name)) {
-      newShifts.splice(newShifts.indexOf(name), 1);
-    } else {
-      newShifts.push(name);
-    }
-    setShifts(newShifts);
-  };
-
-  return (
-    <React.Fragment>
-      <h1 className="w-5/6 mb-5 text-2xl">
-        Shifts
-      </h1>
-      {Object.keys(shiftMapping2).map((option) => (
-        <label>
-          <input
-            type="checkbox"
-            name={option}
-            value={option}
-            checked={shifts[option]}
-            onChange={toggleCheckbox}
-            className="form-check-input"
-          />
-          {option}
-        </label>
-      ))}
-    </React.Fragment>
-  )
-}
  
 
 function App() {
@@ -93,7 +45,7 @@ function App() {
   const [query, setQuery] = useState({}); // (2)
   const [jobs, setJobs] = useState([]); // (3)
   const [filteredJobs, setFilteredJobs] = useState([]); // (4)
-  const [location, setLocation] = useState({place: '2110 W Greenleaf Ave, Chicago, IL 60645', limit: '1 hr 15 mins'})
+  const [location, setLocation] = useState({place: '2110 W Greenleaf Ave, Chicago, IL 60645', limit: '9 hr 30 mins'})
   const fields = ['Matching Schema', 'English', 'Shifts', 'Billingual', 'Weekend']; // (5)
   const options = [
     ['Match At Least One Field'], 
@@ -104,11 +56,10 @@ function App() {
   ];
 
   async function handleClick() {
-      console.log("handle click happened")
       let fakeFilteredJobs = {}; 
       let realFilteredJobs = {};
 
-      Object.values(jobs).map((job) => {
+      Object.values(jobs).forEach((job) => {
         if (!query["Matching Schema"]) {
           if (allFieldMatch(job, query)) {
             let newJob = {...job};
@@ -126,19 +77,19 @@ function App() {
           }
         }})
 
-      console.log(fakeFilteredJobs);
       async function underLimit(job) {
         for (let place of job.locations) {
           const data = await realGetTime(location.place, place);
-          console.log(data)
+
+          console.log("job: ", job)
+       
           for (let row of data.rows) {
-            for (let element of row.elements) {
-              console.log("Upper limit, in seconds:", parseLimit(location.limit))
-              console.log("Trip duration:", element.duration.value)
-              if (element.duration.value <= parseLimit(location.limit)) {
+            for (let i = 0; i < row.elements.length; i++) {
+              const element = row.elements[i];
+
+              if (element.duration && element.duration.value <= parseLimit(location.limit)) {
                 let newJob = jobs[job.company];
-                newJob['duration'] = element.duration.text;
-                console.log("New job duration:", newJob['duration'])
+                newJob['duration'] = `${element.duration.text} (To Location: ${data.destinationAddresses[i]})`;
                 realFilteredJobs[job.company] = newJob;
               }
             }
@@ -147,13 +98,11 @@ function App() {
       }
 
       if (location != null && location.place != null && location.limit != null) {
-        await Promise.all(Object.values(fakeFilteredJobs).map(async (job) => {
-        await underLimit(job)
+          await Promise.all(Object.values(fakeFilteredJobs).map(async (job) => {
+          await underLimit(job)
         }));
-        console.log("Final filtered jobs:", realFilteredJobs)
         setFilteredJobs(realFilteredJobs)
       } else {
-          console.log("This control branch was called")
           setFilteredJobs(fakeFilteredJobs);
       }
   }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 // Input field component (english, location, shift, etc.)
 export const Input = ({options, field, query, setQuery}) => {
@@ -20,12 +20,12 @@ export const Input = ({options, field, query, setQuery}) => {
                 onChange={() => {
                   if (query == null || query[field] == null || !query[field].includes(option)) {
                     let newArr = [option];
-                    let newQuery = {... query};
+                    let newQuery = {...query};
                     newQuery[field] = newArr;
                     setQuery(newQuery);
                   } else if (query[field].includes(option)) {
-                    let newArr = query[field].filter((value) => value != option)
-                    let newQuery = {... query};
+                    let newArr = query[field].filter((value) => value !== option)
+                    let newQuery = {...query};
                     newQuery[field] = newArr;
                     setQuery(newQuery)
                   } 
@@ -43,12 +43,12 @@ export const Input = ({options, field, query, setQuery}) => {
                     } else {
                       newArr = [option];
                     }
-                    let newQuery = {... query};
+                    let newQuery = {...query};
                     newQuery[field] = newArr;
                     setQuery(newQuery);
                   } else if (query[field].includes(option)) {
-                    let newArr = query[field].filter((value) => value != option)
-                    let newQuery = {... query};
+                    let newArr = query[field].filter((value) => value !== option)
+                    let newQuery = {...query};
                     newQuery[field] = newArr;
                     setQuery(newQuery)
                   } 
@@ -63,41 +63,3 @@ export const Input = ({options, field, query, setQuery}) => {
       </React.Fragment>
     );
   }
-
-  /*
-  const Checkboxes = ({shifts, setShifts}) => {
-  //MAKE MORE GENERALIZABLE FOR ALL INPUT FIELDS
-  const toggleCheckbox = changeEvent => {
-    const { name } = changeEvent.target;
-    let newShifts = [...shifts]
-    if (newShifts.includes(name)) {
-      newShifts.splice(newShifts.indexOf(name), 1);
-    } else {
-      newShifts.push(name);
-    }
-    setShifts(newShifts);
-  };
-
-  return (
-    <React.Fragment>
-      <h1 className="w-5/6 mb-5 text-2xl">
-        Shifts
-      </h1>
-      {Object.keys(shiftMapping2).map((option) => (
-        <label>
-          <input
-            type="checkbox"
-            name={option}
-            value={option}
-            checked={shifts[option]}
-            onChange={toggleCheckbox}
-            className="form-check-input"
-          />
-          {option}
-        </label>
-      ))}
-    </React.Fragment>
-  )
-}
-
-*/

@@ -26,13 +26,13 @@ export const CSVToJSON = ({setJobs, setFilteredJobs}) => {
     data.shift();
 
     // Loop over each job object & parse it into a JSON object containing its correponding data
-    data.map((job) => {
+    data.forEach((job) => {
       let currentJob = {};
       let currentJobData = job.data;
 
       // Loop over each job field (company name, industry, english level, etc.)
       // and update the JSON object for the current job accordingly
-      currentJobData.map((fieldData, index) => {
+      currentJobData.forEach((fieldData, index) => {
         let field;
         let fieldDataParsed = fieldData;
         index = parseInt(index);
@@ -55,7 +55,7 @@ export const CSVToJSON = ({setJobs, setFilteredJobs}) => {
           case 4:
             field = 'locations';
             fieldDataParsed = fieldData.split(';');
-            fieldDataParsed.map((location, index) => {
+            fieldDataParsed.forEach((location, index) => {
               fieldDataParsed[index] = location.trim();
             })
             break;
@@ -63,7 +63,7 @@ export const CSVToJSON = ({setJobs, setFilteredJobs}) => {
             field = 'shifts';
             let shiftsArray = fieldData.split(',');
 
-            shiftsArray.map((shift, index) => {
+            shiftsArray.forEach((shift, index) => {
               shiftsArray[index] = shift.trim().toLowerCase();
             })
 
@@ -75,6 +75,9 @@ export const CSVToJSON = ({setJobs, setFilteredJobs}) => {
             break;
           case 7:
             field = 'notes';
+            break;
+          default:
+            field = 'INVALID';
             break;
         }
 
@@ -90,7 +93,9 @@ export const CSVToJSON = ({setJobs, setFilteredJobs}) => {
          }
       
         */
-        currentJob[field] = fieldDataParsed;
+        if (field !== 'INVALID') {
+          currentJob[field] = fieldDataParsed;
+        }
       })
   
 
