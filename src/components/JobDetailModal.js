@@ -10,6 +10,7 @@ export const JobDetailModal = ({selected, setSelected}) => {
 
     useEffect(() => {
       console.log("We changed")
+      console.log(Object.keys(selected));
     },[selected])
 
     // Display information about each field/parameter for a given job
@@ -18,6 +19,8 @@ export const JobDetailModal = ({selected, setSelected}) => {
         <div className="w-auto font-sans text-3xl mt-5 mb-5">
           {selected.company}: {selected.locations.length > 1 ? "Multiple Locations" : selected.locations[0]}
         </div>
+        <div className="w-5/6 text-2xl flex items-start justify-start mb-5">Transit Duration:</div>
+        <div className="w-5/6 h-auto font-sans text-1xl mb-2">{selected.duration}</div>
         <div className="w-5/6 text-2xl flex items-start justify-start mb-5">English Level:</div>
         <div className="w-5/6 h-auto font-sans text-1xl mb-2">{capitalize(selected.english)}</div>
         <div className="w-5/6 text-2xl flex items-start justify-start mb-5">Bilingual:</div>

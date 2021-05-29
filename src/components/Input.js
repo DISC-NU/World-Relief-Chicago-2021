@@ -13,7 +13,7 @@ export const Input = ({options, field, query, setQuery}) => {
               {field === "Matching Schema"
               ?           // Dispatch based on whether the field is the "Matching Schema" ...
               <input
-                checked={((query[field] != null) && (query[field].includes(option))) ? "checked" : undefined}
+                // checked={((query[field] != null) && (query[field].includes(option))) ? "checked" : undefined}
                 id={index}
                 name="matchingSchema"
                 type="checkbox"
@@ -33,7 +33,7 @@ export const Input = ({options, field, query, setQuery}) => {
               />
               :       // ... or any other parameter
               <input 
-                checked={((query[field] != null) && (query[field].includes(option))) ? "checked" : undefined}
+                // checked={((query[field] != null) && (query[field].includes(option))) ? "checked" : undefined}
                 type="checkbox"
                 onChange={() => {
                   if (query == null || query[field] == null || !query[field].includes(option)) {
