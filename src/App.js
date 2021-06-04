@@ -45,7 +45,7 @@ function App() {
   const [query, setQuery] = useState({}); // (2)
   const [jobs, setJobs] = useState([]); // (3)
   const [filteredJobs, setFilteredJobs] = useState([]); // (4)
-  const [location, setLocation] = useState({place: '2110 W Greenleaf Ave, Chicago, IL 60645', limit: '9 hr 30 mins'})
+  const [location, setLocation] = useState({place: '633 Clark Street Evanston, IL 60208', limit: '9 hr 30 mins'})
   const fields = ['Matching Schema', 'English', 'Shifts', 'Billingual', 'Weekend']; // (5)
   const options = [
     ['Match At Least One Field'], 
@@ -89,7 +89,7 @@ function App() {
 
               if (element.duration && element.duration.value <= parseLimit(location.limit)) {
                 let newJob = jobs[job.company];
-                newJob['duration'] = `${element.duration.text} (To Location: ${data.destinationAddresses[i]})`;
+                newJob['duration'] = `${element.duration.text} (From: ${location.place}) (To: ${data.destinationAddresses[i]})`;
                 realFilteredJobs[job.company] = newJob;
               }
             }
@@ -97,7 +97,7 @@ function App() {
         }
       }
 
-      if (location != null && location.place != null && location.limit != null) {
+      if (location != "" && location.place != null && location.limit != "") {
           await Promise.all(Object.values(fakeFilteredJobs).map(async (job) => {
           await underLimit(job)
         }));
@@ -113,7 +113,17 @@ function App() {
 
   function parseLimit (limit) {
     let limitArr = limit.split(' ');
-    return limitArr[0] * 3600 + limitArr[2] * 60
+    let parsedLimit;
+    if (limitArr.length == 4) {
+      parsedLimit = limitArr[0] * 3600 + limitArr[2] * 60
+    } else if (limitArr[1][0] == "h") {
+      parsedLimit = limitArr[0] * 3600
+    } else if (limitArr[1][0] == "m") {
+      parsedLimit = limitArr[0] * 60
+    }
+    console.log("THIS WAS THE LIMIT:", limit)
+    console.log("THIS WAS PARSED LIMIT:", parsedLimit)
+    return parsedLimit
   }
 
   function handleLocation(e) {
@@ -124,7 +134,7 @@ function App() {
 
   function handleLimit(e) {
     let newQuery = {...location}
-    newQuery["limit"] = parseLimit(e.target.value);
+    newQuery["limit"] = e.target.value;
     setLocation(newQuery)
   }
 
@@ -148,8 +158,10 @@ function App() {
           return false;
         }
       } else if (keyParsed === 'shifts') {
-        if (!job.shifts.includes(value.toLowerCase())) {
-          return false;
+        for (let shift of value) {
+          if (!job.shifts.includes(shift.toLowerCase())) {
+            return false;
+          }
         }
       } else if (keyParsed === 'weekend') {
         let weekend;
@@ -187,8 +199,10 @@ function App() {
           return true;
         }
       } else if (keyParsed === 'shifts') {
-        if (job.shifts.includes(value.toLowerCase())) {
-          return true;
+        for (let shift of value) {
+          if (job.shifts.includes(shift)) {
+            return true;
+          }
         }
       } else if (keyParsed === 'weekend') {
         let weekend;
