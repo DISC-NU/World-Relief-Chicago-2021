@@ -5,21 +5,7 @@ import { JobDetailModal } from './components/JobDetailModal';
 import { InputList } from './components/InputList';
 import { JobList } from './components/JobList';
 import { Loader } from "@googlemaps/js-api-loader";
-import firebase from 'firebase/app';
-import 'firebase/database';
 
-// Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyCMqVcop1xb6i57BGhBQmQVrviUWLP1m_I",
-  authDomain: "disc-wrcmatch.firebaseapp.com",
-  databaseURL: "https://disc-wrcmatch-default-rtdb.firebaseio.com",
-  projectId: "disc-wrcmatch",
-  storageBucket: "disc-wrcmatch.appspot.com",
-  messagingSenderId: "124137228052",
-  appId: "1:124137228052:web:5599accd788aaafde36401"
-};
-
-firebase.initializeApp(firebaseConfig);
 
 // Actual app
 function App() {
@@ -71,47 +57,7 @@ function App() {
   ];
 
   // Check whether logged in or not
-  const [loggedIn, setLoggedIn] = useState(true);
-
-  /* async function handleOnLogin(values) {
-    const { email, password } = values
-    setSignInError(null)
-    try {
-      await firebase.auth().signInWithEmailAndPassword(email, password)
-      route.params.roles.role === 'careTeam'
-        ? navigation.navigate('ViewPatientsScreen') // Care team goes here
-        : navigation.navigate('MainTasksScreen', {
-            user: { id: 'Chris' },
-            role: 'patient',
-          }) // Patients/caregiver goes here
-      // (Temporarily) always navigate to Chris's account
-    } catch (error) {
-      setSignInError(error.message)
-    }
-  }
-
-  async function handleOnSignUp(values) {
-    const { name, email, password } = values
-    setSignInError(null)
-    try {
-      const authCredential = await firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
-      const user = authCredential.user
-      await user.updateProfile({ displayName: name })
-      route.params.roles.role === 'careTeam'
-        ? navigation.navigate('ViewPatientsScreen') // Care team goes here
-        : navigation.navigate('MainTasksScreen', { user }) // Patients/caregiver goes here
-    } catch (error) {
-      setSignInError(error.message)
-    }
-  }
-
-  async function handleOnSubmit(values) {
-    return values.confirmPassword
-      ? handleOnSignUp(values)
-      : handleOnLogin(values)
-  } */
+  const [loggedIn, setLoggedIn] = useState(false);
 
   async function handleClick() {
       let fakeFilteredJobs = {}; 
@@ -277,13 +223,25 @@ function App() {
     }
     return false;
   }
+  const [code, setCode] = useState("");
 
   return (
     <React.Fragment>
-      {loggedIn ?
-      <div>
-        <input type="text"></input>
-        <button>Submit?</button>
+      {(!loggedIn) ?
+      <div className="w-screen h-screen flex items-center justify-center border">
+        <div className="w-1/3 h-4/6 border flex flex-col justify-center item-center"> 
+          <div className="w-4/6 ml-5 mr-5">Access Code</div>
+          <input type="text" className="w-auto ml-5 mr-5 h-10 border flex items-center justify-center" onChange={(e) => setCode(e.target.value)}></input>
+          <br></br>
+          <button className="w-auto flex ml-5 mr-5 justify-center items-center onclick-hover border" onClick={() => {
+            if (code == process.env.REACT_APP_ACCESS_CODE) {
+              setLoggedIn(true)
+            } else {
+              alert("Incorrect Password")
+            }
+          }}>Submit</button>
+        </div>
+       
       </div>
       :
       selected ? 
