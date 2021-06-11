@@ -5,8 +5,23 @@ import { JobDetailModal } from './components/JobDetailModal';
 import { InputList } from './components/InputList';
 import { JobList } from './components/JobList';
 import { Loader } from "@googlemaps/js-api-loader";
- 
+import firebase from 'firebase/app';
+import 'firebase/database';
 
+// Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCMqVcop1xb6i57BGhBQmQVrviUWLP1m_I",
+  authDomain: "disc-wrcmatch.firebaseapp.com",
+  databaseURL: "https://disc-wrcmatch-default-rtdb.firebaseio.com",
+  projectId: "disc-wrcmatch",
+  storageBucket: "disc-wrcmatch.appspot.com",
+  messagingSenderId: "124137228052",
+  appId: "1:124137228052:web:5599accd788aaafde36401"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+// Actual app
 function App() {
   const [service, setService] = useState(null);
   useEffect(()=> {
@@ -45,7 +60,7 @@ function App() {
   const [query, setQuery] = useState({}); // (2)
   const [jobs, setJobs] = useState([]); // (3)
   const [filteredJobs, setFilteredJobs] = useState([]); // (4)
-  const [location, setLocation] = useState({place: '633 Clark Street Evanston, IL 60208', limit: '9 hr 30 mins'})
+  const [location, setLocation] = useState({place: '', limit: ''})
   const fields = ['Matching Schema', 'English', 'Shifts', 'Billingual', 'Weekend']; // (5)
   const options = [
     ['Match At Least One Field'], 
@@ -55,6 +70,49 @@ function App() {
     ['Yes']
   ];
 
+  // Check whether logged in or not
+  const [loggedIn, setLoggedIn] = useState(true);
+
+  /* async function handleOnLogin(values) {
+    const { email, password } = values
+    setSignInError(null)
+    try {
+      await firebase.auth().signInWithEmailAndPassword(email, password)
+      route.params.roles.role === 'careTeam'
+        ? navigation.navigate('ViewPatientsScreen') // Care team goes here
+        : navigation.navigate('MainTasksScreen', {
+            user: { id: 'Chris' },
+            role: 'patient',
+          }) // Patients/caregiver goes here
+      // (Temporarily) always navigate to Chris's account
+    } catch (error) {
+      setSignInError(error.message)
+    }
+  }
+
+  async function handleOnSignUp(values) {
+    const { name, email, password } = values
+    setSignInError(null)
+    try {
+      const authCredential = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+      const user = authCredential.user
+      await user.updateProfile({ displayName: name })
+      route.params.roles.role === 'careTeam'
+        ? navigation.navigate('ViewPatientsScreen') // Care team goes here
+        : navigation.navigate('MainTasksScreen', { user }) // Patients/caregiver goes here
+    } catch (error) {
+      setSignInError(error.message)
+    }
+  }
+
+  async function handleOnSubmit(values) {
+    return values.confirmPassword
+      ? handleOnSignUp(values)
+      : handleOnLogin(values)
+  } */
+
   async function handleClick() {
       let fakeFilteredJobs = {}; 
       let realFilteredJobs = {};
@@ -63,16 +121,19 @@ function App() {
         if (!query["Matching Schema"]) {
           if (allFieldMatch(job, query)) {
             let newJob = {...job};
+            newJob.duration = "Not applicable (no location specified)";
             fakeFilteredJobs[newJob.company] = newJob;
           }
         } else if (query["Matching Schema"].includes("Match At Least One Field")) {
           if (oneFieldMatch(job, query)) {
             let newJob = {...job};
+            newJob.duration = "Not applicable (no location specified)";
             fakeFilteredJobs[newJob.company] = newJob;
           }
         } else {
           if (allFieldMatch(job, query)) {
             let newJob = {...job};
+            newJob.duration = "Not applicable (no location specified)";
             fakeFilteredJobs[newJob.company] = newJob;
           }
         }})
@@ -97,13 +158,13 @@ function App() {
         }
       }
 
-      if (location != "" && location.place != null && location.limit != "") {
+      if (location.place != "" && location.limit != "") {
           await Promise.all(Object.values(fakeFilteredJobs).map(async (job) => {
           await underLimit(job)
         }));
         setFilteredJobs(realFilteredJobs)
       } else {
-          setFilteredJobs(fakeFilteredJobs);
+        setFilteredJobs(fakeFilteredJobs);
       }
   }
 
@@ -219,7 +280,13 @@ function App() {
 
   return (
     <React.Fragment>
-      {selected ? 
+      {loggedIn ?
+      <div>
+        <input type="text"></input>
+        <button>Submit?</button>
+      </div>
+      :
+      selected ? 
         <div className="w-screen h-screen flex items-center justify-center">
           <JobDetailModal selected={selected} setSelected={setSelected}></JobDetailModal>
         </div>
