@@ -13,7 +13,6 @@ export const JobList = ({jobList, setSelected}) => {
     },[zero])
 
     return (
-        
         zero ? 
         <div>No matching jobs!</div>
         :

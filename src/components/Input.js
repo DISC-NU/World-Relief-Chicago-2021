@@ -11,7 +11,7 @@ export const Input = ({options, field, query, setQuery}) => {
           {options.map((option, index) => 
           (<div className="flex border flex-col justify-center align-center items-center w-1/4 p-2">
               {field === "Matching Schema"
-              ?           // Dispatch based on whether the field is the "Matching Schema" ...
+              ?   // Dispatch based on whether the field is the "Matching Schema" ...
               <input
                 checked={((query[field] != null) && (query[field].includes(option))) ? "checked" : undefined}
                 id={index}
@@ -31,7 +31,7 @@ export const Input = ({options, field, query, setQuery}) => {
                   } 
                 }}
               />
-              :       // ... or any other parameter
+              :   // ... or any other parameter
               <input 
                 checked={((query[field] != null) && (query[field].includes(option))) ? "checked" : undefined}
                 type="checkbox"
