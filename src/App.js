@@ -225,54 +225,60 @@ function App() {
         </div>
          :
         <div className="w-screen h-screen">
-            <React.Fragment>
-              <br></br>
-              <div className="w-auto h-auto font-sans text-6xl flex flex-row justify-center items-center">
-                World Relief Chicago Job Match
-              </div>
-              <CSVToJSON setJobs={setJobs} setFilteredJobs={setFilteredJobs}></CSVToJSON>
-              <div className="w-full h-full flex justify-around flex-row items-center">
-                  <div className="w-5/12 h-auto border rounded-lg shadow-2xl flex flex-col items-center justify-start overflow-y-auto">
-                    <br></br>
-                    <br></br>
-                    <InputList 
-                      options={options}
-                      fields={fields} 
-                      jobs={jobs}
-                      setFilteredJobs={setFilteredJobs}
-                      query={query} 
-                      setQuery={setQuery}
-                    />
-                    <div className="flex justify-start align-start w-5/6 h-auto flex-col">
-                      <h1 className="w-5/6 mb-2 text-2xl">Location</h1>
-                        <input type="text" placeholder="Starting location..." className="border"
-                            value={location.place || null}
-                            onChange={handleLocation}
-                            > 
-                        </input>
-                        <input type="text" placeholder="e.g. type 3 hrs 2 min" className="border"
-                        value={location.limit || null}
-                         onChange={handleLimit}
+          <br></br>
+          <div className="w-auto h-auto font-sans text-6xl flex flex-row justify-center items-center">
+            World Relief Chicago Job Match
+          </div>
+          <CSVToJSON setJobs={setJobs} setFilteredJobs={setFilteredJobs}></CSVToJSON>
+
+          {/* Encapsulates both columns */}
+          <div className="w-full h-full flex justify-around flex-row">
+
+              {/* Job Filtering Inputs */}
+              <div className="w-5/12 h-auto border rounded-lg shadow-2xl flex flex-col items-center justify-start overflow-y-auto">
+                <br></br>
+                <br></br>
+                <InputList 
+                  options={options}
+                  fields={fields} 
+                  jobs={jobs}
+                  setFilteredJobs={setFilteredJobs}
+                  query={query} 
+                  setQuery={setQuery}
+                />
+                <div className="flex justify-start align-start w-5/6 h-auto flex-col">
+                  <h1 className="w-5/6 mb-2 text-2xl">Location</h1>
+                    <input type="text" placeholder="Starting location..." className="border"
+                        value={location.place || null}
+                        onChange={handleLocation}
                         > 
-                        </input>
-                      <br></br>
-                    </div>
-                <button 
-                  className="w-5/6 h-16 border rounded-2xl mb-10"
-                  onClick={handleClick}>
-                  Filter Jobs
-                </button>
+                    </input>
+                    <input type="text" placeholder="e.g. type 3 hrs 2 min" className="border"
+                    value={location.limit || null}
+                      onChange={handleLimit}
+                    > 
+                    </input>
+                  <br></br>
               </div>
-                  <div 
-                    className="w-6/12 h-full border rounded-lg shadow-2xl flex flex-col justify-center items-center overflow-y-auto">
-                    <JobList jobList={filteredJobs} setSelected={setSelected}/>
-                    
-                  </div>
-              </div>
-          </React.Fragment>
+            <button 
+              className="w-5/6 h-16 border rounded-2xl mb-10"
+              onClick={handleClick}>
+              Filter Jobs
+            </button>
+          </div>
+
+            {/* Job List */}
+            <div 
+              className="w-6/12 h-full border rounded-lg shadow-2xl flex flex-col justify-center items-center overflow-y-auto">
+              <JobList jobList={filteredJobs} setSelected={setSelected}/>
+            </div>
+          </div>
+          <br></br>
+          <br></br>
         </div> 
       }
     </React.Fragment>
+    
   );
 }
 
